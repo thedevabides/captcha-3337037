@@ -1,11 +1,10 @@
 <?php
 
-/*
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace Drupal\image_captcha\Controller;
+
+/**
+ * To change template file, choose Tools | Templates and open it in the editor.
+ */
 
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\JsonResponse;
