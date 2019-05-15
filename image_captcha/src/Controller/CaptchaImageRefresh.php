@@ -9,6 +9,7 @@ namespace Drupal\image_captcha\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Url;
 
 /**
  * Description of CaptchaImageRefresh.
@@ -43,7 +44,7 @@ class CaptchaImageRefresh extends ControllerBase {
         ->condition('csid', $captcha_sid, '=')
         ->execute();
       $result['data'] = [
-        'url' => \Drupal::url('image_captcha.generator', ['session_id' => $captcha_sid, 'timestamp' => \Drupal::time()->getRequestTime()]),
+        'url' => Url::fromRoute('image_captcha.generator', ['session_id' => $captcha_sid, 'timestamp' => \Drupal::time()->getRequestTime()])->toString(),
         'token' => $captcha_token,
         'sid' => $captcha_sid,
       ];
