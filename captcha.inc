@@ -23,7 +23,7 @@ use Drupal\Core\Render\Element;
  *   and $captcha_type->captcha_type.
  */
 function captcha_set_form_id_setting($form_id, $captcha_type) {
-  /* @var CaptchaPoint $captcha_point */
+  /* @var Drupal\captcha\Entity\CaptchaPoint $captcha_point */
   $captcha_point = CaptchaPoint::load($form_id);
 
   if ($captcha_point) {
