@@ -2,12 +2,6 @@
 
 namespace Drupal\Tests\captcha\Functional;
 
-use Drupal\Core\Entity\Entity\EntityFormDisplay;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Tests\captcha\Functional\CaptchaWebTestBase;
-
 /**
  * Tests CAPTCHA main test case sensitivity.
  *
