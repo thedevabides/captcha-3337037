@@ -23,7 +23,7 @@
  * $captcha['solution']: this is the solution of your challenge
  * $captcha['form']: an array of the form elements you want to add to the form.
  * There should be a key 'captcha_response' in this array, which points to
- * the form element where the user enters his answer.
+ * the form element where the user enters the answer.
  * An optional additional argument $captcha_sid with the captcha session ID is
  * available for more advanced challenges (e.g. the image CAPTCHA uses this
  * argument, see image_captcha_captcha()) and it is used for every session.
