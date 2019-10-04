@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\captcha\Tests;
+namespace Drupal\Tests\captcha\Functional;
 
 use Drupal\captcha\Entity\CaptchaPoint;
 use Drupal\Core\Url;
@@ -10,7 +10,7 @@ use Drupal\Core\Url;
  *
  * @group captcha
  */
-class CaptchaAdminTestCase extends CaptchaBaseWebTestCase {
+class CaptchaAdminTest extends CaptchaWebTestBase {
 
   /**
    * Test access to the admin pages.
