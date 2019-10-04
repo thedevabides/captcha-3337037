@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\captcha\Controller;
+namespace Drupal\captcha\Entity\Controller;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
