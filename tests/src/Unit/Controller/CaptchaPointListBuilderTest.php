@@ -30,7 +30,6 @@ class CaptchaPointListBuilderTest extends UnitTestCase {
     $this->mockContainer->get('string_translation')->willReturn($this->getStringTranslationStub());
     $this->mockContainer->get('module_handler')->willReturn($this->mockModuleHandler->reveal());
 
-
     $this->mockEntityType = $this->prophesize(EntityTypeInterface::class);
     $this->mockEntityStorage = $this->prophesize(EntityStorageInterface::class);
     $this->listBuilder = new CaptchaPointListBuilder($this->mockEntityType->reveal(), $this->mockEntityStorage->reveal());
