@@ -18,8 +18,6 @@ class CaptchaAdminTest extends CaptchaWebTestBase {
   public function testAdminAccess() {
     $this->drupalLogin($this->normalUser);
     $this->drupalGet(self::CAPTCHA_ADMIN_PATH);
-    // @TODO do we need this ?
-    // file_put_contents('tmp.simpletest.html', $this->drupalGetContent());
     $this->assertText(t('Access denied'), 'Normal users should not be able to access the CAPTCHA admin pages', 'CAPTCHA');
 
     $this->drupalLogin($this->adminUser);

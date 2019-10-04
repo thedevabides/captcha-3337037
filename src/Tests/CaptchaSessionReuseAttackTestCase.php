@@ -365,8 +365,6 @@ class CaptchaSessionReuseAttackTestCase extends WebTestBase {
       ->save();
 
     // Go to log in form.
-    // @TODO Bartik has two login forms because of sidebar's one on
-    // user page that's why we have a bug.
     $this->drupalGet('<front>');
     $this->assertCaptchaPresence(TRUE);
 
