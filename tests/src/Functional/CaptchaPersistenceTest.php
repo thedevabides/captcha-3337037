@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\captcha\Functional;
 
-use Drupal\Tests\captcha\Functional\CaptchaWebTestBase;
-
 /**
  * Tests CAPTCHA Persistence.
  *
