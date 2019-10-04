@@ -13,6 +13,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests for CaptchaPointListBuilder.
+ *
+ * @group captcha
  */
 class CaptchaPointListBuilderTest extends UnitTestCase {
 
