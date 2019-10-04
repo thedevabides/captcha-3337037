@@ -9,19 +9,6 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * The TODO list.
- *
- * @todo write test for CAPTCHAs on admin pages.
- * @todo test for default challenge type.
- * @todo test about placement (comment form, node forms, log in form, etc).
- * @todo test if captcha_cron does it work right.
- * @todo test custom CAPTCHA validation stuff.
- * @todo test if entry on status report (Already X blocked form submissions).
- * @todo test space ignoring validation of image CAPTCHA.
- * @todo refactor the 'comment_body[0][value]' stuff.
- */
-
-/**
  * Base class for CAPTCHA tests.
  *
  * Provides common setup stuff and various helper functions.
