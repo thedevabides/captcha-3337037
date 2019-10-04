@@ -191,7 +191,7 @@ abstract class CaptchaWebTestBase extends BrowserTestBase {
    * @return int
    *   Captcha SID integer.
    */
-  protected function  getCaptchaSidFromForm($form_html_id = NULL) {
+  protected function getCaptchaSidFromForm($form_html_id = NULL) {
     if (!$form_html_id) {
       $elements = $this->xpath('//input[@name="captcha_sid"]');
     }
