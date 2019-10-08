@@ -20,7 +20,7 @@ class CaptchaService {
    *   "$type (from module $module)" with $module the module name
    *   implementing the CAPTCHA and $type the name of the CAPTCHA type.
    */
-  public function getAvailableChallengeTypes($add_special_options = TRUE) {
+  public function getAvailableChallengeTypes(bool $add_special_options = TRUE) {
     $challenges = [];
 
     if ($add_special_options) {
