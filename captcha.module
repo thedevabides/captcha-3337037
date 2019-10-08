@@ -141,7 +141,7 @@ function template_preprocess_captcha(&$variables) {
       '#description' => $element['#description'],
       '#children' => Markup::create($captcha_children_output),
       '#attributes' => [
-        'id' => ['captcha'],
+        'id' => 'captcha',
         'class' => ['captcha'],
         'open' => [''],
       ],
