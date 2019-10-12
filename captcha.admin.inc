@@ -39,14 +39,3 @@ function _captcha_available_challenge_types($add_special_options = TRUE) {
   }
   return $captcha_types;
 }
-
-/**
- * Helper function for generating an example challenge.
- */
-function _captcha_generate_example_challenge($module, $type) {
-  return [
-    '#type' => 'captcha',
-    '#captcha_type' => $module . '/' . $type,
-    '#captcha_admin_mode' => TRUE,
-  ];
-}
