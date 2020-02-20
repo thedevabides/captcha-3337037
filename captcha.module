@@ -396,7 +396,7 @@ function _captcha_get_posted_captcha_info(array $element, FormStateInterface $fo
       (int) $input['captcha_sid']
       : NULL;
     $posted_captcha_token = isset($input['captcha_token']) ?
-      preg_replace("/[^a-zA-Z0-9]/", "", (string) $input['captcha_token'])
+      preg_replace("/[^a-zA-Z0-9-_]/", "", (string) $input['captcha_token'])
       : NULL;
 
     if ($posted_form_id == $this_form_id) {
