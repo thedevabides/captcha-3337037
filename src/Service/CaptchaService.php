@@ -67,7 +67,7 @@ class CaptchaService {
    * @param array $captcha_element
    *   the CAPTCHA element to insert.
    */
-  function insertCaptchaElement(array &$form, array $placement, array $captcha_element) {
+  public function insertCaptchaElement(array &$form, array $placement, array $captcha_element) {
     // Get path, target and target weight or use defaults if not available.
     $target_key = isset($placement['key']) ? $placement['key'] : NULL;
     $target_weight = isset($placement['weight']) ? $placement['weight'] : NULL;

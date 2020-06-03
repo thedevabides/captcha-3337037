@@ -566,7 +566,9 @@ function captcha_validate($element, FormStateInterface &$form_state) {
  * @return array
  *   The manipulated element.
  *
- * @deprecated Use \Drupal\captcha\Element\Captcha::preRenderProcess() instead.
+ * @deprecated in captcha:8.x-1.0 and is removed from captcha:8.x-2.0.
+ *   Use \Drupal\captcha\Element\Captcha::preRenderProcess() instead.
+ * @see https://www.drupal.org/project/captcha/issues/1949682
  */
 function captcha_pre_render_process(array $element) {
   return Captcha::preRenderProcess($element);
