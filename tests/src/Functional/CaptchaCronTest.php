@@ -20,6 +20,11 @@ class CaptchaCronTest extends BrowserTestBase {
   public static $modules = ['captcha'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Temporary captcha sessions storage.
    *
    * @var [int]

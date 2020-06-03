@@ -9,6 +9,7 @@
  * to solve.
  */
 
+use Drupal\captcha\Element\Captcha;
 use Drupal\captcha\Entity\CaptchaPoint;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Form\BaseFormIdInterface;
@@ -564,39 +565,11 @@ function captcha_validate($element, FormStateInterface &$form_state) {
  *
  * @return array
  *   The manipulated element.
+ *
+ * @deprecated Use \Drupal\captcha\Element\Captcha::preRenderProcess() instead.
  */
 function captcha_pre_render_process(array $element) {
-  module_load_include('inc', 'captcha');
-
-  // Get form and CAPTCHA information.
-  $captcha_info = $element['#captcha_info'];
-  $form_id = $captcha_info['form_id'];
-  $captcha_sid = (int) ($captcha_info['captcha_sid']);
-  // Check if CAPTCHA is still required.
-  // This check is done in a first phase during the element processing
-  // (@see captcha_process), but it is also done here for better support
-  // of multi-page forms. Take previewing a node submission for example:
-  // when the challenge is solved correctely on preview, the form is still
-  // not completely submitted, but the CAPTCHA can be skipped.
-  if (_captcha_required_for_user($captcha_sid, $form_id) || $element['#captcha_admin_mode']) {
-    // Update captcha_sessions table: store the solution
-    // of the generated CAPTCHA.
-    _captcha_update_captcha_session($captcha_sid, $captcha_info['solution']);
-
-    // Handle the response field if it is available and if it is a textfield.
-    if (isset($element['captcha_widgets']['captcha_response']['#type']) && $element['captcha_widgets']['captcha_response']['#type'] == 'textfield') {
-      // Before rendering: presolve an admin mode challenge or
-      // empty the value of the captcha_response form item.
-      $value = $element['#captcha_admin_mode'] ? $captcha_info['solution'] : '';
-      $element['captcha_widgets']['captcha_response']['#value'] = $value;
-    }
-  }
-  else {
-    // Remove CAPTCHA widgets from form.
-    unset($element['captcha_widgets']);
-  }
-
-  return $element;
+  return Captcha::preRenderProcess($element);
 }
 
 /**
