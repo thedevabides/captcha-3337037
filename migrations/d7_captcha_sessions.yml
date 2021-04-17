@@ -1,0 +1,35 @@
+id: d7_captcha_sessions
+label: 'Captcha Sessions Table'
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_captcha_sessions
+process:
+  csid: csid
+  token: token
+  uid: uid
+  sid: sid
+  ip_address: ip_address
+  timestamp: timestamp
+  form_id: form_id
+  solution: solution
+  status: status
+  attempts: attempts
+destination:
+  plugin: table
+  table_name: captcha_sessions
+  id_fields:
+    csid:
+      type: integer
+  fields:
+    csid: csid
+    token: token
+    uid: uid
+    sid: sid
+    ip_address: ip_address
+    timestamp: timestamp
+    form_id: form_id
+    solution: solution
+    status: status
+    attempts: attempts
+migration_dependencies: { }
