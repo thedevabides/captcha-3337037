@@ -16,7 +16,7 @@ process:
   status: status
   attempts: attempts
 destination:
-  plugin: table
+  plugin: captcha_table
   table_name: captcha_sessions
   id_fields:
     csid:

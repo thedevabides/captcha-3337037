@@ -68,7 +68,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @endcode
  *
  * @MigrateDestination(
- *   id = "table"
+ *   id = "captcha_table"
  * )
  */
 class Table extends DestinationBase implements ContainerFactoryPluginInterface, ImportAwareInterface {
