@@ -371,6 +371,7 @@ class CaptchaImageResponse extends Response {
 
       // Pick a random font from the list.
       $font = $fonts[array_rand($fonts)];
+      $font = _image_captcha_get_font_uri($font);
 
       // Get character dimensions for TrueType fonts.
       if ($font != 'BUILTIN') {
