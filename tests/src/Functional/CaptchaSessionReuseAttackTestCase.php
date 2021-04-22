@@ -14,7 +14,7 @@ class CaptchaSessionReuseAttackTestCase extends CaptchaWebTestBase {
    */
   protected function assertCaptchaSessionIdReuseAttackDetection() {
     // There should be an error message about wrong response.
-    $this->assertText(self::CAPTCHA_WRONG_RESPONSE_ERROR_MESSAGE,
+    $this->assertSession()->pageTextContains(self::CAPTCHA_WRONG_RESPONSE_ERROR_MESSAGE,
       'CAPTCHA response should flagged as wrong.',
       'CAPTCHA'
     );
@@ -57,8 +57,8 @@ class CaptchaSessionReuseAttackTestCase extends CaptchaWebTestBase {
 
     // Post a new comment, reusing the previous CAPTCHA session.
     $edit = $this->getCommentFormValues();
-    $this->assertSession()->hiddenFieldExists("captcha_sid")->setValue((string) $captcha_sid);
-    $this->assertSession()->hiddenFieldExists("captcha_token")->setValue((string) $captcha_token);
+    $this->assertSession()->hiddenFieldExists("captcha_sid")->setValue((string)$captcha_sid);
+    $this->assertSession()->hiddenFieldExists("captcha_token")->setValue((string)$captcha_token);
     $edit['captcha_response'] = $solution;
     $this->submitForm($edit, 'Preview');
     // CAPTCHA session reuse attack should be detected.
@@ -105,8 +105,8 @@ class CaptchaSessionReuseAttackTestCase extends CaptchaWebTestBase {
 
     // Post a new node, reusing the previous CAPTCHA session.
     $edit = $this->getNodeFormValues();
-    $this->assertSession()->hiddenFieldExists("captcha_sid")->setValue((string) $captcha_sid);
-    $this->assertSession()->hiddenFieldExists("captcha_token")->setValue((string) $captcha_token);
+    $this->assertSession()->hiddenFieldExists("captcha_sid")->setValue((string)$captcha_sid);
+    $this->assertSession()->hiddenFieldExists("captcha_token")->setValue((string)$captcha_token);
     $edit['captcha_response'] = $solution;
     $this->submitForm($edit, 'Preview');
     // CAPTCHA session reuse attack should be detected.
@@ -145,7 +145,7 @@ class CaptchaSessionReuseAttackTestCase extends CaptchaWebTestBase {
     $this->assertCaptchaPresence(FALSE);
     // If a "log out" link appears on the page, it is almost certainly because
     // the login was successful.
-    $this->assertText($this->normalUser->getDisplayName());
+    $this->assertSession()->pageTextContains($this->normalUser->getDisplayName());
 
     // Log out again.
     $this->drupalLogout();
@@ -154,9 +154,9 @@ class CaptchaSessionReuseAttackTestCase extends CaptchaWebTestBase {
     $this->drupalGet('<front>');
 
     // Try to log in again, reusing the previous CAPTCHA session.
-    $this->assertSession()->hiddenFieldExists("captcha_sid")->setValue((string) $captcha_sid);
-    $this->assertSession()->hiddenFieldExists("captcha_token")->setValue((string) $captcha_token);
-    $this->assert('pass', json_encode($edit));
+    $this->assertSession()->hiddenFieldExists("captcha_sid")->setValue((string)$captcha_sid);
+    $this->assertSession()->hiddenFieldExists("captcha_token")->setValue((string)$captcha_token);
+    $this->assertNotEmpty(json_encode($edit));
     $this->submitForm($edit, 'Log in');
     // CAPTCHA session reuse attack should be detected.
     $this->assertCaptchaSessionIdReuseAttackDetection();
@@ -187,7 +187,7 @@ class CaptchaSessionReuseAttackTestCase extends CaptchaWebTestBase {
     // Post should be accepted: no warnings,
     // no CAPTCHA reuse detection (which could be used by user log in block).
     $this->assertCaptchaResponseAccepted();
-    $this->assertText($comment_subject);
+    $this->assertSession()->pageTextContains($comment_subject);
   }
 
 }
