@@ -85,7 +85,7 @@ $connection->insert('system')
   ])
   ->execute();
 
-// Create the Captcha Points D7 Table
+// Create the Captcha Points D7 Table.
 $connection->schema()->createTable('captcha_points', [
   'fields' => [
     'form_id' => [
@@ -108,7 +108,7 @@ $connection->schema()->createTable('captcha_points', [
     ],
   ],
   'primary key' => [
-    'form_id'
+    'form_id',
   ],
   'mysql_character_set' => 'utf8',
 ]);
@@ -117,7 +117,7 @@ $connection->insert('captcha_points')
   ->fields([
     'form_id',
     'module',
-    'captcha_type'
+    'captcha_type',
   ])
   ->values([
     'form_id' => 'comment_node_article_form',
@@ -131,7 +131,7 @@ $connection->insert('captcha_points')
   ])
   ->execute();
 
-// Create the Captcha Points D7 Table
+// Create the Captcha Points D7 Table.
 $connection->schema()->createTable('captcha_sessions', [
   'fields' => [
     'csid' => [
@@ -148,7 +148,7 @@ $connection->schema()->createTable('captcha_sessions', [
       'type' => 'int',
       'not null' => TRUE,
       'size' => 'normal',
-      'default' => 0
+      'default' => 0,
     ],
     'sid' => [
       'type' => 'varchar',
@@ -193,13 +193,13 @@ $connection->schema()->createTable('captcha_sessions', [
     ],
   ],
   'primary key' => [
-    'csid'
+    'csid',
   ],
   'indexes' => [
     'csid_ip' => [
       'csid',
-      'ip_address'
-    ]
+      'ip_address',
+    ],
   ],
   'mysql_character_set' => 'utf8',
 ]);

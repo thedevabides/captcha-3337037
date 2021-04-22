@@ -64,4 +64,5 @@ class CaptchaPoints extends DrupalSqlBase {
     $ids['form_id']['type'] = 'string';
     return $ids;
   }
+
 }

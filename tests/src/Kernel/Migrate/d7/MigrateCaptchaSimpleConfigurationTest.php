@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\captcha\Kernel\Migrate\d7;
 
-use Drupal\captcha\CaptchaPointInterface;
-use Drupal\captcha\Entity\CaptchaPoint;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 
 /**
@@ -18,6 +16,11 @@ class MigrateCaptchaSimpleConfigurationTest extends MigrateDrupal7TestBase {
    */
   protected static $modules = ['captcha'];
 
+  /**
+   * The expected configuration from the Captcha fixture.
+   *
+   * @var array[]
+   */
   protected $expectedConfig = [
     'captcha.settings' => [
       'enabled_default' => 1,

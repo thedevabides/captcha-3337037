@@ -31,4 +31,5 @@ class CaptchaTypeFormatter extends ProcessPluginBase {
     $type = $row->getSourceProperty('captcha_type');
     return $module . '/' . $type;
   }
+
 }

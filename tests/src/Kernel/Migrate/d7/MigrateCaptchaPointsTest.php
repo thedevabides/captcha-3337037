@@ -18,6 +18,11 @@ class MigrateCaptchaPointsTest extends MigrateDrupal7TestBase {
    */
   protected static $modules = ['captcha'];
 
+  /**
+   * The expected captcha points from the Captcha fixture.
+   *
+   * @var array[]
+   */
   protected $captchaPoints = [
     [
       'form_id' => 'comment_node_article_form',
@@ -60,13 +65,12 @@ class MigrateCaptchaPointsTest extends MigrateDrupal7TestBase {
   /**
    * Tests a single captcha point type.
    *
-   * @dataProvider testCaptchaPointDataProvider
-   *
    * @param string $form_id
    *   The captcha point form id.
    * @param string $captcha_type
    *   The expected captcha type for the config.
-   * @param $status
+   * @param bool $status
+   *   The expected status for a captcha type.
    */
   protected function assertEntity(string $form_id, string $captcha_type, $status) {
     /** @var \Drupal\captcha\CaptchaPointInterface $entity */

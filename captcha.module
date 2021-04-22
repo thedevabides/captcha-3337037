@@ -492,8 +492,8 @@ function captcha_validate($element, FormStateInterface &$form_state) {
   $is_cacheable = (bool) $form_state->getValue('captcha_cacheable', FALSE);
 
   if ($is_cacheable) {
-    // Completely ignore the captcha_sessions table, since the captcha_sid can get reused by the cache.
-
+    // Completely ignore the captcha_sessions table,
+    // since the captcha_sid can get reused by the cache.
     $solution = FALSE;
     $captcha_validate = $element['#captcha_validate'];
     if (!function_exists($captcha_validate)) {

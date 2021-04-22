@@ -44,7 +44,7 @@ class CaptchaTest extends CaptchaWebTestBase {
       'pass' => $user->pass_raw,
       'captcha_response' => '?',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Log in'), [], self::LOGIN_HTML_FORM_ID);
+    $this->submitForm($edit, 'Log in', self::LOGIN_HTML_FORM_ID);
     // Check for error message.
     $this->assertText(self::CAPTCHA_WRONG_RESPONSE_ERROR_MESSAGE, 'CAPTCHA should block user login form', 'CAPTCHA');
 
@@ -83,7 +83,8 @@ class CaptchaTest extends CaptchaWebTestBase {
     $comment_subject = $edit['subject[0][value]'];
     $comment_body = $edit['comment_body[0][value]'];
     $edit['captcha_response'] = $captcha_response;
-    $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $edit, t('Save'), [], 'comment-form');
+    $this->drupalGet('comment/reply/node/' . $node->id() . '/comment');
+    $this->submitForm($edit, 'Save', 'comment-form');
 
     if ($should_pass) {
       // There should be no error message.
@@ -153,7 +154,8 @@ class CaptchaTest extends CaptchaWebTestBase {
     // Preview comment with correct CAPTCHA answer.
     $edit = $this->getCommentFormValues();
     $edit['captcha_response'] = 'Test 123';
-    $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $edit, t('Preview'));
+    $this->drupalGet('comment/reply/node/' . $node->id() . '/comment');
+    $this->submitForm($edit, 'Preview');
 
     // Check that there is no CAPTCHA after preview.
     $this->assertCaptchaPresence(FALSE);
@@ -180,7 +182,7 @@ class CaptchaTest extends CaptchaWebTestBase {
     $edit = $this->getNodeFormValues();
     $edit['captcha_response'] = 'Test 123';
     $this->drupalGet('node/add/page');
-    $this->drupalPostForm(NULL, $edit, t('Preview'));
+    $this->submitForm($edit, 'Preview');
 
     $this->assertCaptchaPresence(FALSE);
   }
@@ -229,7 +231,8 @@ class CaptchaTest extends CaptchaWebTestBase {
     ];
 
     // Create intentionally long id Captcha Point.
-    $this->drupalPostForm(self::CAPTCHA_ADMIN_PATH . '/captcha-points/add', $form_values, t('Save'));
+    $this->drupalGet(self::CAPTCHA_ADMIN_PATH . '/captcha-points/add');
+    $this->submitForm($form_values, 'Save');
     $this->assertRaw(t('Captcha Point for %label form was created.', ['%label' => $formId]));
 
     // We need to log out to test the captcha.
