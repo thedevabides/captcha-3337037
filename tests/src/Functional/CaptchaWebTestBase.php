@@ -44,7 +44,7 @@ abstract class CaptchaWebTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['captcha', 'comment'];
+  protected static $modules = ['captcha', 'comment'];
 
   /**
    * {@inheritdoc}
