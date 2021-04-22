@@ -3,10 +3,8 @@
 namespace Drupal\captcha\Plugin\migrate\source;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -19,19 +17,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class CaptchaPoints extends DrupalSqlBase {
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $state, $entity_type_manager);
-    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -45,7 +36,6 @@ class CaptchaPoints extends DrupalSqlBase {
       $migration,
       $container->get('state'),
       $container->get('entity_type.manager'),
-      $container->get('module_handler')
     );
   }
 

@@ -72,7 +72,7 @@ class MigrateCaptchaPointsTest extends MigrateDrupal7TestBase {
     /** @var \Drupal\captcha\CaptchaPointInterface $entity */
     $entity = CaptchaPoint::load($form_id);
     $this->assertInstanceOf(CaptchaPointInterface::class, $entity);
-    $this->assertSame($form_id, $entity->label());
+    $this->assertSame($form_id, $entity->getFormId());
     $this->assertSame($captcha_type, $entity->getCaptchaType());
     $this->assertSame($status, $entity->status());
   }
