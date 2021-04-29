@@ -60,6 +60,41 @@ class CaptchaTest extends CaptchaWebTestBase {
   }
 
   /**
+   * Testing the response error menssage.
+   */
+  public function testCaptchaResponseErrorMenssage() {
+    // Customize the response error message.
+    $this->drupalLogin($this->adminUser);
+    $customized_menssage = 'The answer you entered is wrong.';
+    $edit = [
+      'wrong_captcha_response_message' => $customized_menssage,
+    ];
+    $this->drupalGet("admin/config/people/captcha");
+    $this->submitForm($edit, $this->t('Save configuration'));
+
+    // Set a CAPTCHA on login form.
+    /* @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
+    $captcha_point = \Drupal::entityTypeManager()
+      ->getStorage('captcha_point')
+      ->load('user_login_form');
+    $captcha_point->setCaptchaType('captcha/Math');
+    $captcha_point->enable()->save();
+
+    // Check if the menssage is default.
+    $this->drupalLogout();
+    $this->drupalGet('user');
+    // Try to log in, which should fail.
+    $edit = [
+      'name' => $this->adminUser->getDisplayName(),
+      'pass' => $this->adminUser->pass_raw,
+      'captcha_response' => '?',
+    ];
+    $this->submitForm($edit, $this->t('Log in'), self::LOGIN_HTML_FORM_ID);
+    $this->assertSession()->pageTextContains($customized_menssage, 'CAPTCHA should block user login form', 'CAPTCHA');
+
+  }
+
+  /**
    * Assert function for testing if comment posting works as it should.
    *
    * Creates node with comment writing enabled, tries to post comment
