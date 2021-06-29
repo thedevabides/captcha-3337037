@@ -130,3 +130,16 @@ function captcha_install() {
   }
 
 }
+
+/**
+ * Implements hook_update_N().
+ */
+function captcha_update_8901(&$sandbox) {
+  $entityType = \Drupal::entityTypeManager()
+    ->getDefinition('captcha_point');
+
+  if ($entityType) {
+    \Drupal::entityDefinitionUpdateManager()
+      ->installEntityType($entityType);
+  }
+}
