@@ -35,7 +35,7 @@ class CaptchaPoints extends DrupalSqlBase {
       $plugin_definition,
       $migration,
       $container->get('state'),
-      $container->get('entity_type.manager'),
+      $container->get('entity_type.manager')
     );
   }
 
