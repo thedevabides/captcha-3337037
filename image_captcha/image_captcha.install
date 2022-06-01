@@ -42,3 +42,17 @@ function image_captcha_install() {
     hash('sha256', drupal_get_path('module', 'image_captcha') . '/fonts/Tuffy/Tuffy.ttf'),
   ])->save(TRUE);
 }
+
+/**
+ * Convert existing setting to hashes.
+ */
+function image_captcha_update_8001() {
+  $config = \Drupal::configFactory()->getEditable('image_captcha.settings');
+
+  foreach ($config->get('image_captcha_fonts') as $index => $font) {
+    if (strpos($font, '.ttf') !== FALSE) {
+      $config->set('image_captcha_fonts.' . $index, hash('sha256', $font));
+    }
+  }
+  $config->save(TRUE);
+}
