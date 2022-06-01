@@ -18,7 +18,7 @@ class CaptchaTest extends CaptchaWebTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'captcha_long_form_id_test'];
+  public static $modules = ['block', 'captcha_long_form_id_test'];
 
   /**
    * Testing the protection of the user log in form.

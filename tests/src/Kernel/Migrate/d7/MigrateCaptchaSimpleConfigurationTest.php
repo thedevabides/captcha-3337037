@@ -14,7 +14,7 @@ class MigrateCaptchaSimpleConfigurationTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['captcha'];
+  public static $modules = ['captcha'];
 
   /**
    * The expected configuration from the Captcha fixture.

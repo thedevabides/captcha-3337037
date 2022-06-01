@@ -16,7 +16,7 @@ class MigrateCaptchaPointsTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['captcha'];
+  public static $modules = ['captcha'];
 
   /**
    * The expected captcha points from the Captcha fixture.

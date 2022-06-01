@@ -16,7 +16,7 @@ class CaptchaCacheTest extends CaptchaWebTestBase {
    *
    * @var array
    */
-  protected static $modules = [
+  public static $modules = [
     'block',
     'image_captcha',
     'captcha_test',
