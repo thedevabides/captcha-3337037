@@ -375,7 +375,7 @@ class ImageCaptchaSettingsForm extends ConfigFormBase {
 
       // Append the PHP built-in font at the end.
       $title = $this->t('Preview of built-in font');
-      $available_fonts['BUILTIN'] = $this->t('PHP built-in font: <img src="@font_preview_url" alt="@title" title="@title"', [
+      $available_fonts['BUILTIN'] = $this->t('PHP built-in font: <img src="@font_preview_url" alt="@title" title="@title">', [
         '@font_preview_url' => Url::fromRoute('image_captcha.font_preview', ['token' => 'BUILTIN'])
           ->toString(),
         '@title' => $title,
