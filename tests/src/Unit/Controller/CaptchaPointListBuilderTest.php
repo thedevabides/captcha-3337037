@@ -55,6 +55,8 @@ class CaptchaPointListBuilderTest extends UnitTestCase {
     $mockEntity->access(Argument::any())->willReturn(FALSE);
     $mockEntity->id()->willReturn('target_form_id');
     $mockEntity->getCaptchaType()->willReturn('captcha_type');
+    $mockEntity->hasLinkTemplate('edit-form')->willReturn(FALSE);
+    $mockEntity->hasLinkTemplate('delete-form')->willReturn(FALSE);
 
     $row = $this->listBuilder->buildRow($mockEntity->reveal());
 
