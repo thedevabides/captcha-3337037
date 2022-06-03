@@ -110,7 +110,7 @@ function captcha_requirements($phase) {
  */
 function captcha_install() {
 
-  if (!\Drupal::service('config.installer')->isSyncing()) {
+  if (!\Drupal::service('config.installer')->isSyncing() && \Drupal::moduleHandler()->moduleExists('node')) {
     $form_ids = [];
     // Add form_ids of all currently known node types too.
     foreach (node_type_get_names() as $type => $name) {
