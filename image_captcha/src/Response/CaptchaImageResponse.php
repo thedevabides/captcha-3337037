@@ -99,6 +99,7 @@ class CaptchaImageResponse extends Response {
     else {
       $this->headers->set('content-type', 'image/png');
     }
+    $this->headers->set('cache-control', 'no-store, must-revalidate');
 
     return parent::sendHeaders();
   }
