@@ -73,6 +73,7 @@ class CaptchaImageRefresh extends ControllerBase {
         ->condition('csid', $captcha_sid, '=')
         ->execute();
       $result['data'] = [
+        //phpcs:ignore
         'url' => Url::fromRoute('image_captcha.generator', ['session_id' => $captcha_sid, 'timestamp' => $this->time->getRequestTime()])->toString(),
         'token' => $captcha_token,
         'sid' => $captcha_sid,

@@ -102,7 +102,7 @@ abstract class CaptchaWebTestBase extends BrowserTestBase {
     $comment_field->setSetting('form_location', CommentItemInterface::FORM_SEPARATE_PAGE);
     $comment_field->save();
 
-    /* @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
+    /** @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
     $captcha_point = \Drupal::entityTypeManager()
       ->getStorage('captcha_point')
       ->load('user_login_form');

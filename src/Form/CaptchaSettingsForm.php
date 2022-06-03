@@ -187,7 +187,7 @@ class CaptchaSettingsForm extends ConfigFormBase {
     ];
 
     // Field for CAPTCHA persistence.
-    // TODO for D7: Rethink/simplify the explanation and UI strings.
+    // @todo for D7: Rethink/simplify the explanation and UI strings.
     $form['persistence'] = [
       '#type' => 'radios',
       '#title' => $this->t('Persistence'),

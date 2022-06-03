@@ -222,7 +222,7 @@ function _image_captcha_check_setup($check_fonts = TRUE) {
     }
     if (!empty($fonts)) {
       $readable_fonts = [];
-      list($readable_fonts, $problem_fonts) = _image_captcha_check_fonts($fonts);
+      [$readable_fonts, $problem_fonts] = _image_captcha_check_fonts($fonts);
       if (count($problem_fonts) != 0) {
         $status = $status | IMAGE_CAPTCHA_ERROR_TTF_FILE_READ_PROBLEM;
       }
@@ -302,7 +302,7 @@ function image_captcha_captcha($op, $captcha_type = '', $captcha_sid = NULL) {
         // Generate image source URL (add timestamp to avoid problems with
         // client side caching: subsequent images of the same CAPTCHA session
         // have the same URL, but should display a different code).
-        list($width, $height) = _image_captcha_image_size($code);
+        [$width, $height] = _image_captcha_image_size($code);
         $result['form']['captcha_image'] = [
           '#theme' => 'image',
           '#uri' => Url::fromRoute('image_captcha.generator', [
@@ -384,7 +384,8 @@ function image_captcha_after_build_process($element) {
     $is_image_captcha = FALSE;
     if (isset($captcha_point->captchaType) && $captcha_point->captchaType == 'image_captcha/Image') {
       $is_image_captcha = TRUE;
-    } elseif (isset($captcha_point->captchaType) && $captcha_point->captchaType == 'default') {
+    }
+    elseif (isset($captcha_point->captchaType) && $captcha_point->captchaType == 'default') {
       $default_challenge = \Drupal::service('config.manager')
         ->getConfigFactory()
         ->get('captcha.settings')

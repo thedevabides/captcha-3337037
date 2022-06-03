@@ -63,7 +63,7 @@ class CaptchaPointForm extends EntityForm {
 
     module_load_include('inc', 'captcha', 'captcha.admin');
 
-    /* @var CaptchaPointInterface $captchaPoint */
+    /** @var CaptchaPointInterface $captchaPoint */
     $captcha_point = $this->entity;
 
     // Support to set a default form_id through a query argument.
@@ -107,7 +107,7 @@ class CaptchaPointForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    /* @var CaptchaPoint $captcha_point */
+    /** @var CaptchaPoint $captcha_point */
     $captcha_point = $this->entity;
     $status = $captcha_point->save();
 

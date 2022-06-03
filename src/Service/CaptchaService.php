@@ -69,9 +69,9 @@ class CaptchaService {
    */
   public function insertCaptchaElement(array &$form, array $placement, array $captcha_element) {
     // Get path, target and target weight or use defaults if not available.
-    $target_key = isset($placement['key']) ? $placement['key'] : NULL;
-    $target_weight = isset($placement['weight']) ? $placement['weight'] : NULL;
-    $path = isset($placement['path']) ? $placement['path'] : [];
+    $target_key = $placement['key'] ?? NULL;
+    $target_weight = $placement['weight'] ?? NULL;
+    $path = $placement['path'] ?? [];
 
     // Walk through the form along the path.
     $form_stepper = &$form;

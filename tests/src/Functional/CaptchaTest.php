@@ -31,7 +31,7 @@ class CaptchaTest extends CaptchaWebTestBase {
     $this->drupalLogout();
 
     // Set a CAPTCHA on login form.
-    /* @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
+    /** @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
     $captcha_point = \Drupal::entityTypeManager()
       ->getStorage('captcha_point')
       ->load('user_login_form');
@@ -73,7 +73,7 @@ class CaptchaTest extends CaptchaWebTestBase {
     $this->submitForm($edit, $this->t('Save configuration'));
 
     // Set a CAPTCHA on login form.
-    /* @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
+    /** @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
     $captcha_point = \Drupal::entityTypeManager()
       ->getStorage('captcha_point')
       ->load('user_login_form');
@@ -231,7 +231,7 @@ class CaptchaTest extends CaptchaWebTestBase {
    */
   public function testCaptchaOnLoginBlockOnAdminPagesIssue893810() {
     // Set a CAPTCHA on login block form.
-    /* @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
+    /** @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
     $captcha_point = \Drupal::entityTypeManager()
       ->getStorage('captcha_point')
       ->load('user_login_form');

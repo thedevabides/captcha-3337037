@@ -34,7 +34,7 @@ class CaptchaAdminTest extends CaptchaWebTestBase {
   public function testCaptchaPointSettingGetterAndSetter() {
     $comment_form_id = self::COMMENT_FORM_ID;
     captcha_set_form_id_setting($comment_form_id, 'test');
-    /* @var CaptchaPoint $result */
+    /** @var \Drupal\captcha\Entity\CaptchaPoint $result */
     $result = captcha_get_form_id_setting($comment_form_id);
     $this->assertNotNull($result, 'CAPTCHA exists', 'CAPTCHA');
     $this->assertEquals($result->getCaptchaType(), 'test', 'CAPTCHA type: default');
@@ -112,7 +112,7 @@ class CaptchaAdminTest extends CaptchaWebTestBase {
     $edit = [
       'administration_mode' => TRUE,
     ];
-    
+
     $this->drupalGet(self::CAPTCHA_ADMIN_PATH);
     $this->submitForm($edit, $this->t('Save configuration'));
 
@@ -166,7 +166,7 @@ class CaptchaAdminTest extends CaptchaWebTestBase {
     // (on CAPTCHA admin links fieldset).
     // This is actually the same as the previous setting because
     // the captcha/Math is the default for the default challenge.
-    // TODO Make sure the edit is a real change.
+    // @todo Make sure the edit is a real change.
     $this->assertSession()->pageTextContains($this->t('CAPTCHA: challenge "@type" enabled', ['@type' => $edit['captchaType']]),
       'Enable a challenge through the CAPTCHA admin links', 'CAPTCHA');
     // Check if CAPTCHA was successfully edited (through API).
@@ -307,7 +307,7 @@ class CaptchaAdminTest extends CaptchaWebTestBase {
     $this->assertSession()->responseContains($this->t('Captcha Point for %label form was created.', ['%label' => $captcha_point_form_id]));
 
     // Check in database.
-    /* @var CaptchaPoint result */
+    /** @var \Drupal\captcha\Entity\CaptchaPoint result */
     $result = $this->getCaptchaPointSettingFromDatabase($captcha_point_form_id);
     $this->assertEquals($result->captchaType, $captcha_point_module . '/' . $captcha_point_type,
       'Enabled CAPTCHA point should have module and type set');

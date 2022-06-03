@@ -24,11 +24,11 @@ use Drupal\Core\Site\Settings;
 /**
  * Constants for CAPTCHA persistence.
  *
- * TODO: change these integers to strings because the CAPTCHA settings
+ * @todo change these integers to strings because the CAPTCHA settings
  * form saves them as strings in the variables table anyway?
  */
 
-// @TODO: move all constants to some class.
+// @todo move all constants to some class.
 // Always add a CAPTCHA (even on every page of a multipage workflow).
 define('CAPTCHA_PERSISTENCE_SHOW_ALWAYS', 0);
 // Only one CAPTCHA has to be solved per form instance/multi-step workflow.
@@ -180,7 +180,7 @@ function captcha_form_alter(array &$form, FormStateInterface $form_state, $form_
 
     if (!empty($entity_ids) && is_array($entity_ids)) {
       $captcha_point_id = array_pop($entity_ids);
-      /* @var CaptchaPoint $captcha_point */
+      /** @var \Drupal\captcha\Element\CaptchaPoint $captcha_point */
       $captcha_point = \Drupal::entityTypeManager()
         ->getStorage('captcha_point')
         ->load($captcha_point_id);
@@ -231,7 +231,7 @@ function captcha_form_alter(array &$form, FormStateInterface $form_state, $form_
       ->isAdminRoute() || $config->get('allow_on_admin_pages'))
   ) {
     // Add CAPTCHA administration tools.
-    /* @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
+    /** @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
     $captcha_point = CaptchaPoint::load($form_id);
 
     // For administrators: show CAPTCHA info and offer link to configure it.
@@ -478,8 +478,8 @@ function captcha_validate($element, FormStateInterface &$form_state) {
   // Get CAPTCHA response.
   $captcha_response = $form_state->getValue('captcha_response');
 
-  // Get CAPTCHA session from CAPTCHA info
-  // TODO: is this correct in all cases: see comments in previous revisions?
+  // Get CAPTCHA session from CAPTCHA info.
+  // @todo is this correct in all cases: see comments in previous revisions?
   $csid = $captcha_info['captcha_sid'];
 
   // Bypass captcha validation if access attribute value is false.
@@ -674,7 +674,7 @@ function captcha_captcha($op, $captcha_type = '') {
         // This challenge is not visible through the administrative interface
         // as it is not listed in captcha_captcha('list'),
         // but it is meant for debugging and testing purposes.
-        // TODO for Drupal 7 version: This should be done with a mock module,
+        // @todo for Drupal 7 version: This should be done with a mock module,
         // but Drupal 6 does not support this (mock modules can not be hidden).
         $result = [
           'solution' => 'Test 123',
