@@ -209,10 +209,23 @@ function _image_captcha_check_setup($check_fonts = TRUE) {
   if ($check_fonts) {
     // Check availability of enabled fonts.
     $fonts = _image_captcha_get_enabled_fonts();
-    $readable_fonts = [];
-    list($readable_fonts, $problem_fonts) = _image_captcha_check_fonts($fonts);
-    if (count($problem_fonts) != 0) {
-      $status = $status | IMAGE_CAPTCHA_ERROR_TTF_FILE_READ_PROBLEM;
+    if (empty($fonts)) {
+      // Config value might be wrong, try to reinstall the field.
+      require_once __DIR__ . '/image_captcha.install';
+      image_captcha_install();
+
+      // Try again now.
+      $fonts = _image_captcha_get_enabled_fonts();
+      if (empty($fonts)) {
+        $status = $status | IMAGE_CAPTCHA_ERROR_TTF_FILE_READ_PROBLEM;
+      }
+    }
+    if (!empty($fonts)) {
+      $readable_fonts = [];
+      list($readable_fonts, $problem_fonts) = _image_captcha_check_fonts($fonts);
+      if (count($problem_fonts) != 0) {
+        $status = $status | IMAGE_CAPTCHA_ERROR_TTF_FILE_READ_PROBLEM;
+      }
     }
   }
 
