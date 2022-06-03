@@ -221,9 +221,9 @@ function captcha_form_alter(array &$form, FormStateInterface $form_state, $form_
       }
 
       // Get placement in form and insert in form.
-      $captcha_placement = _captcha_get_captcha_placement($form_id, $form);
-      $captchaService->insertCaptchaElement($form, $captcha_placement, $captcha_element);
-
+      if ($captcha_placement = _captcha_get_captcha_placement($form_id, $form)) {
+        $captchaService->insertCaptchaElement($form, $captcha_placement, $captcha_element);
+      }
     }
   }
   elseif ($config->get('administration_mode') && $account->hasPermission('administer CAPTCHA settings')
