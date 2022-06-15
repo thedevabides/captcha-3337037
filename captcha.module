@@ -94,11 +94,13 @@ function captcha_point_load($id) {
  * Implements hook_theme().
  */
 function captcha_theme() {
+  $path = Drupal::hasService('extension.list.module') ? Drupal::service('extension.list.module')->getPath('captcha') : drupal_get_path('module', 'captcha');
   return [
     'captcha' => [
       'render element' => 'element',
       'template' => 'captcha',
-      'path' => drupal_get_path('module', 'captcha') . '/templates',
+      //@phpstan-ignore-next-line
+      'path' => $path . '/templates',
     ],
   ];
 }
@@ -165,7 +167,7 @@ function captcha_form_alter(array &$form, FormStateInterface $form_state, $form_
   $captchaService = \Drupal::service('captcha.helper');
 
   // Visitor does not have permission to skip CAPTCHAs.
-  module_load_include('inc', 'captcha');
+  \Drupal::moduleHandler()->loadInclude('captcha', 'inc');
   if (!$account->hasPermission('skip CAPTCHA')) {
     $query = \Drupal::entityQuery('captcha_point');
     $query->condition('label', $form_id);
@@ -180,7 +182,7 @@ function captcha_form_alter(array &$form, FormStateInterface $form_state, $form_
 
     if (!empty($entity_ids) && is_array($entity_ids)) {
       $captcha_point_id = array_pop($entity_ids);
-      /** @var \Drupal\captcha\Element\CaptchaPoint $captcha_point */
+      /** @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
       $captcha_point = \Drupal::entityTypeManager()
         ->getStorage('captcha_point')
         ->load($captcha_point_id);

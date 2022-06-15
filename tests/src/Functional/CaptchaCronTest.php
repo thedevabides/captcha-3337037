@@ -17,7 +17,7 @@ class CaptchaCronTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['captcha'];
+  protected static $modules = ['captcha'];
 
   /**
    * {@inheritdoc}
@@ -27,14 +27,14 @@ class CaptchaCronTest extends BrowserTestBase {
   /**
    * Temporary captcha sessions storage.
    *
-   * @var [int]
+   * @var array
    */
   public $captchaSessions;
 
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     ini_set('session.gc_maxlifetime', 60 * 60 * 24);

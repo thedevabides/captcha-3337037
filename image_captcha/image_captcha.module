@@ -84,7 +84,8 @@ function _image_captcha_get_available_fonts_from_directories($directories = NULL
   if ($directories === NULL) {
     $request = \Drupal::service('request_stack')->getCurrentRequest();
     $directories = [
-      drupal_get_path('module', 'image_captcha') . '/fonts',
+      //@phpstan-ignore-next-line
+      (Drupal::hasService('extension.list.module') ? \Drupal::service('extension.list.module')->getPath('image_captcha') : drupal_get_path('module', 'image_captcha')) . '/fonts',
       'sites/all/libraries/fonts',
       DrupalKernel::findSitePath($request) . '/libraries/fonts',
     ];

@@ -85,7 +85,7 @@ class Captcha extends FormElement implements ContainerFactoryPluginInterface {
    */
   public static function processCaptchaElement(&$element, FormStateInterface $form_state, &$complete_form) {
     // Add captcha.inc file.
-    module_load_include('inc', 'captcha');
+    \Drupal::moduleHandler()->loadInclude('captcha', 'inc');
 
     // Add JavaScript for general CAPTCHA functionality.
     $element['#attached']['library'][] = 'captcha/base';
@@ -262,7 +262,7 @@ class Captcha extends FormElement implements ContainerFactoryPluginInterface {
    *   The manipulated element.
    */
   public static function preRenderProcess(array $element) {
-    module_load_include('inc', 'captcha');
+    \Drupal::moduleHandler()->loadInclude('captcha', 'inc');
 
     // Get form and CAPTCHA information.
     $captcha_info = $element['#captcha_info'];

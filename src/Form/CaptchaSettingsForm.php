@@ -87,8 +87,7 @@ class CaptchaSettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('captcha.settings');
-    module_load_include('inc', 'captcha');
-    module_load_include('inc', 'captcha', 'captcha.admin');
+    \Drupal::moduleHandler()->loadInclude('captcha', 'inc');
 
     // Configuration of which forms to protect, with what challenge.
     $form['form_protection'] = [

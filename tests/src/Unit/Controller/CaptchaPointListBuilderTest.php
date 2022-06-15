@@ -21,7 +21,7 @@ class CaptchaPointListBuilderTest extends UnitTestCase {
   /**
    * Set up.
    */
-  public function setUp() {
+  public function setUp(): void {
     $this->mockModuleHandler = $this->prophesize(ModuleHandlerInterface::class);
     $this->mockModuleHandler->invokeAll(Argument::any(), Argument::any())->willReturn([]);
     $this->mockModuleHandler->alter(Argument::any(), Argument::any(), Argument::any())->willReturn([]);

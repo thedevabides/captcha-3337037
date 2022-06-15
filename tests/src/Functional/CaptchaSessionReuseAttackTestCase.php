@@ -14,10 +14,7 @@ class CaptchaSessionReuseAttackTestCase extends CaptchaWebTestBase {
    */
   protected function assertCaptchaSessionIdReuseAttackDetection() {
     // There should be an error message about wrong response.
-    $this->assertSession()->pageTextContains(self::CAPTCHA_WRONG_RESPONSE_ERROR_MESSAGE,
-      'CAPTCHA response should flagged as wrong.',
-      'CAPTCHA'
-    );
+    $this->assertSession()->pageTextContains(self::CAPTCHA_WRONG_RESPONSE_ERROR_MESSAGE);
   }
 
   /**
