@@ -12,7 +12,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  * @group captcha
  */
 class CaptchaAdminTest extends CaptchaWebTestBase {
-  
+
   use StringTranslationTrait;
 
   /**

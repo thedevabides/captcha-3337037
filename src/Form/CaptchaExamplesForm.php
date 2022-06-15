@@ -70,8 +70,9 @@ class CaptchaExamplesForm extends FormBase {
             $challenges[$module] = $challenge;
           }
         });
-      } else {
-        //@phpstan-ignore-next-line
+      }
+      else {
+        // @phpstan-ignore-next-line
         $modules_list = $this->moduleHandler->getImplementations('captcha');
         foreach ($modules_list as $mkey => $module) {
           $challenges[$mkey] = call_user_func_array($module . '_captcha', ['list']);
@@ -99,7 +100,7 @@ class CaptchaExamplesForm extends FormBase {
         }
       }
       else {
-        //@phpstan-ignore-next-line
+        // @phpstan-ignore-next-line
         $additional_data['node_access_modules'] = $this->moduleHandler->getImplementations('node_access');
       }
     }

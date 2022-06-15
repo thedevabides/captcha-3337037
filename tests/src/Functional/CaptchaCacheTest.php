@@ -68,12 +68,12 @@ class CaptchaCacheTest extends CaptchaWebTestBase {
     $this->assertNotEquals($image_path, $this->getSession()->getPage()->find('css', '.captcha img')->getAttribute('src'));
     // Check image caching, remove the base path since drupalGet() expects the
     // internal path.
-    // todo: Uncomment with Issue #3285734. It currently breaks D10 DrupalCi.
-    //$this->drupalGet(substr($image_path, strlen($base_path)));
-    //$this->assertSession()->statusCodeEquals(200);
+    // @todo Fix with issue #3285734. It currently breaks D10 DrupalCi.
+    // $this->drupalGet(substr($image_path, strlen($base_path)));
+    // $this->assertSession()->statusCodeEquals(200);
     // Request image twice to make sure no errors happen (due to page caching).
-    //$this->drupalGet(substr($image_path, strlen($base_path)));
-    //$this->assertSession()->statusCodeEquals(200);
+    // $this->drupalGet(substr($image_path, strlen($base_path)));
+    // $this->assertSession()->statusCodeEquals(200);
   }
 
   /**

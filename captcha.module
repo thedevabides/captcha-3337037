@@ -99,7 +99,7 @@ function captcha_theme() {
     'captcha' => [
       'render element' => 'element',
       'template' => 'captcha',
-      //@phpstan-ignore-next-line
+      // @phpstan-ignore-next-line
       'path' => $path . '/templates',
     ],
   ];

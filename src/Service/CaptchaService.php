@@ -23,6 +23,7 @@ class CaptchaService {
    * Constructor for Captcha Service helper.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   Module Handler Service.
    */
   public function __construct(ModuleHandlerInterface $module_handler) {
     $this->moduleHandler = $module_handler;
@@ -64,7 +65,7 @@ class CaptchaService {
       });
     }
     else {
-      //@phpstan-ignore-next-line
+      // @phpstan-ignore-next-line
       foreach (\Drupal::moduleHandler()->getImplementations('captcha') as $module) {
         $type = call_user_func_array($module . '_captcha', ['list']);
         if (!is_array($type)) {
