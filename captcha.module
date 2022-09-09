@@ -97,8 +97,7 @@ function captcha_point_load($id) {
  * Implements hook_theme().
  */
 function captcha_theme() {
-  // @phpstan-ignore-next-line
-  $path = Drupal::hasService('extension.list.module') ? Drupal::service('extension.list.module')->getPath('captcha') : drupal_get_path('module', 'captcha');
+  $path = \Drupal::service('extension.list.module')->getPath('captcha');
   return [
     'captcha' => [
       'render element' => 'element',
