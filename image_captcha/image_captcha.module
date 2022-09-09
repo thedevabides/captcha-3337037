@@ -142,7 +142,7 @@ function _image_captcha_check_fonts(array $fonts) {
  */
 function _image_captcha_utf8_split($str) {
   $characters = [];
-  $len = strlen($str);
+  $len = mb_strlen($str);
 
   for ($i = 0; $i < $len;) {
     $chr = ord($str[$i]);
@@ -170,7 +170,7 @@ function _image_captcha_utf8_split($str) {
       }
     }
 
-    $characters[] = substr($str, $i, $width);
+    $characters[] = mb_substr($str, $i, $width);
     $i += $width;
   }
 
