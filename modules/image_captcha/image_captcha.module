@@ -9,17 +9,8 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\DrupalKernel;
-
-define('IMAGE_CAPTCHA_ALLOWED_CHARACTERS', 'aAbBCdEeFfGHhijKLMmNPQRrSTtWXYZ23456789');
-
-// Setup status flags.
-define('IMAGE_CAPTCHA_ERROR_NO_GDLIB', 1);
-define('IMAGE_CAPTCHA_ERROR_NO_TTF_SUPPORT', 2);
-define('IMAGE_CAPTCHA_ERROR_TTF_FILE_READ_PROBLEM', 4);
-
-define('IMAGE_CAPTCHA_FILE_FORMAT_JPG', 1);
-define('IMAGE_CAPTCHA_FILE_FORMAT_PNG', 2);
-define('IMAGE_CAPTCHA_FILE_FORMAT_TRANSPARENT_PNG', 3);
+use Drupal\image_captcha\Constants\ImageCaptchaConstants;
+use Drupal\captcha\Constants\CaptchaConstants;
 
 /**
  * Implements hook_help().
@@ -39,7 +30,7 @@ function image_captcha_help($route_name, RouteMatchInterface $route_match) {
  *   List of font paths.
  */
 function _image_captcha_get_enabled_fonts() {
-  if (IMAGE_CAPTCHA_ERROR_NO_TTF_SUPPORT & _image_captcha_check_setup(FALSE)) {
+  if (ImageCaptchaConstants::IMAGE_CAPTCHA_ERROR_NO_TTF_SUPPORT & _image_captcha_check_setup(FALSE)) {
     return ['BUILTIN'];
   }
   else {
@@ -199,11 +190,11 @@ function _image_captcha_check_setup($check_fonts = TRUE) {
   // We need at least the imagepng function.
   // Note that the imagejpg function is optionally also used, but not required.
   if (!function_exists('imagepng')) {
-    $status = $status | IMAGE_CAPTCHA_ERROR_NO_GDLIB;
+    $status = $status | ImageCaptchaConstants::IMAGE_CAPTCHA_ERROR_NO_GDLIB;
   }
 
   if (!function_exists('imagettftext')) {
-    $status = $status | IMAGE_CAPTCHA_ERROR_NO_TTF_SUPPORT;
+    $status = $status | ImageCaptchaConstants::IMAGE_CAPTCHA_ERROR_NO_TTF_SUPPORT;
   }
 
   if ($check_fonts) {
@@ -217,14 +208,13 @@ function _image_captcha_check_setup($check_fonts = TRUE) {
       // Try again now.
       $fonts = _image_captcha_get_enabled_fonts();
       if (empty($fonts)) {
-        $status = $status | IMAGE_CAPTCHA_ERROR_TTF_FILE_READ_PROBLEM;
+        $status = $status | ImageCaptchaConstants::IMAGE_CAPTCHA_ERROR_TTF_FILE_READ_PROBLEM;
       }
     }
     if (!empty($fonts)) {
-      $readable_fonts = [];
-      [$readable_fonts, $problem_fonts] = _image_captcha_check_fonts($fonts);
+      $problem_fonts = _image_captcha_check_fonts($fonts);
       if (count($problem_fonts) != 0) {
-        $status = $status | IMAGE_CAPTCHA_ERROR_TTF_FILE_READ_PROBLEM;
+        $status = $status | ImageCaptchaConstants::IMAGE_CAPTCHA_ERROR_TTF_FILE_READ_PROBLEM;
       }
     }
   }
@@ -267,7 +257,7 @@ function image_captcha_captcha($op, $captcha_type = '', $captcha_sid = NULL) {
     case 'list':
       // Only offer the image CAPTCHA if it is possible to generate an image
       // on this setup.
-      if (!(_image_captcha_check_setup() & IMAGE_CAPTCHA_ERROR_NO_GDLIB)) {
+      if (!(_image_captcha_check_setup() & ImageCaptchaConstants::IMAGE_CAPTCHA_ERROR_NO_GDLIB)) {
         return ['Image'];
       }
       else {
@@ -331,11 +321,11 @@ function image_captcha_captcha($op, $captcha_type = '', $captcha_sid = NULL) {
         // ignoring spaces.
         switch (\Drupal::config('captcha.settings')
           ->get('default_validation')) {
-          case CAPTCHA_DEFAULT_VALIDATION_CASE_SENSITIVE:
+          case CaptchaConstants::CAPTCHA_DEFAULT_VALIDATION_CASE_SENSITIVE:
             $result['captcha_validate'] = 'captcha_validate_ignore_spaces';
             break;
 
-          case CAPTCHA_DEFAULT_VALIDATION_CASE_INSENSITIVE:
+          case CaptchaConstants::CAPTCHA_DEFAULT_VALIDATION_CASE_INSENSITIVE:
             $result['captcha_validate'] = 'captcha_validate_case_insensitive_ignore_spaces';
             break;
         }

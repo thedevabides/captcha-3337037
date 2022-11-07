@@ -12,6 +12,7 @@ use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\image_captcha\Constants\ImageCaptchaConstants;
 
 /**
  * Displays the pants settings form.
@@ -83,7 +84,7 @@ class ImageCaptchaSettingsForm extends ConfigFormBase {
 
     // First some error checking.
     $setup_status = _image_captcha_check_setup(FALSE);
-    if ($setup_status & IMAGE_CAPTCHA_ERROR_NO_GDLIB) {
+    if ($setup_status & ImageCaptchaConstants::IMAGE_CAPTCHA_ERROR_NO_GDLIB) {
       $this->messenger()->addError($this->t(
         'The Image CAPTCHA module can not generate images because your PHP setup does not support it (no <a href="!gdlib" target="_blank">GD library</a> with JPEG support).',
         ['!gdlib' => 'http://php.net/manual/en/book.image.php']
@@ -113,7 +114,7 @@ class ImageCaptchaSettingsForm extends ConfigFormBase {
     $form['image_captcha_code_settings']['image_captcha_image_allowed_chars'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Characters to use in the code'),
-      '#default_value' => $config->get('image_captcha_image_allowed_chars') ? $config->get('image_captcha_image_allowed_chars') : IMAGE_CAPTCHA_ALLOWED_CHARACTERS,
+      '#default_value' => $config->get('image_captcha_image_allowed_chars') ? $config->get('image_captcha_image_allowed_chars') : ImageCaptchaConstants::IMAGE_CAPTCHA_ALLOWED_CHARACTERS,
     ];
     $form['image_captcha_code_settings']['image_captcha_code_length'] = [
       '#type' => 'select',
@@ -178,9 +179,9 @@ class ImageCaptchaSettingsForm extends ConfigFormBase {
       '#description' => $this->t('Select the file format for the image. JPEG usually results in smaller files, PNG allows tranparency.'),
       '#default_value' => $config->get('image_captcha_file_format'),
       '#options' => [
-        IMAGE_CAPTCHA_FILE_FORMAT_JPG => $this->t('JPEG'),
-        IMAGE_CAPTCHA_FILE_FORMAT_PNG => $this->t('PNG'),
-        IMAGE_CAPTCHA_FILE_FORMAT_TRANSPARENT_PNG => $this->t('PNG with transparent background'),
+        ImageCaptchaConstants::IMAGE_CAPTCHA_FILE_FORMAT_JPG => $this->t('JPEG'),
+        ImageCaptchaConstants::IMAGE_CAPTCHA_FILE_FORMAT_PNG => $this->t('PNG'),
+        ImageCaptchaConstants::IMAGE_CAPTCHA_FILE_FORMAT_TRANSPARENT_PNG => $this->t('PNG with transparent background'),
       ],
     ];
 
@@ -272,13 +273,11 @@ class ImageCaptchaSettingsForm extends ConfigFormBase {
           $form_state->setErrorByName('image_captcha_image_allowed_chars', $this->t('The built-in font only supports Latin2 characters. Only use "a" to "z" and numbers.'));
         }
       }
-
-      $readable_fonts = [];
       $available_fonts = _image_captcha_get_font_uri();
       foreach ($fonts as $token) {
         $fonts[$token] = $available_fonts[$token];
       }
-      [$readable_fonts, $problem_fonts] = _image_captcha_check_fonts($fonts);
+      $problem_fonts = _image_captcha_check_fonts($fonts);
       if (count($problem_fonts) > 0) {
         $form_state->setErrorByName('image_captcha_fonts', $this->t('The following fonts are not readable: %fonts.', ['%fonts' => implode(', ', $problem_fonts)]));
       }
@@ -302,7 +301,6 @@ class ImageCaptchaSettingsForm extends ConfigFormBase {
     $imageSettings = $form_state->cleanValues()->getValues();
     if (!isset($form['image_captcha_font_settings']['no_ttf_support'])) {
       // Filter the image_captcha fonts array to pick out the selected ones.
-      $image_captcha_fonts = $form_state->getValue('image_captcha_fonts');
       $imageSettings['image_captcha_fonts'] = array_filter($imageSettings['image_captcha_fonts']);
     }
     $config = $this->config('image_captcha.settings');
@@ -338,7 +336,7 @@ class ImageCaptchaSettingsForm extends ConfigFormBase {
 
     // First check if there is TrueType support.
     $setup_status = _image_captcha_check_setup(FALSE);
-    if ($setup_status & IMAGE_CAPTCHA_ERROR_NO_TTF_SUPPORT) {
+    if ($setup_status & ImageCaptchaConstants::IMAGE_CAPTCHA_ERROR_NO_TTF_SUPPORT) {
       // Show a warning that there is no TrueType support.
       $form['no_ttf_support'] = [
         '#type' => 'item',

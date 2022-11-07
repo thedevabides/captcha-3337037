@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CaptchaPointListBuilderTest extends UnitTestCase {
 
   use ProphecyTrait;
+
   /**
    * Set up.
    */

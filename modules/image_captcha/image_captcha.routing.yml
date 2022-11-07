@@ -17,6 +17,7 @@ image_captcha.generator:
   defaults:
     _controller: '\Drupal\image_captcha\Controller\CaptchaImageGeneratorController::image'
   requirements:
+    # Allow access, because anybody is allowed to generate the image captcha:
     _access: 'TRUE'
 
 image_captcha.refresh:
@@ -24,4 +25,5 @@ image_captcha.refresh:
   defaults:
     _controller: '\Drupal\image_captcha\Controller\CaptchaImageRefresh::refreshCaptcha'
   requirements:
+    # Allow access, because anybody is allowed to refresh the image captcha:
     _access: 'TRUE'
