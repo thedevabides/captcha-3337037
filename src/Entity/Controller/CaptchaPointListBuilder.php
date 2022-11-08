@@ -27,7 +27,7 @@ class CaptchaPointListBuilder extends ConfigEntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     $row['form_id'] = $entity->id();
     $row['captcha_type'] = $entity->getCaptchaType();
-    $row['captcha_status'] = $entity->status() ? 'Enabled' : 'Disabled';
+    $row['captcha_status'] = $entity->status() ? $this->t('Enabled') : $this->t('Disabled');
 
     return $row + parent::buildRow($entity);
   }
