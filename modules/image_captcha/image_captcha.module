@@ -9,7 +9,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\DrupalKernel;
-use Drupal\image_captcha\Constants\ImageCaptchaConstants;
 use Drupal\captcha\Constants\CaptchaConstants;
 
 /**
@@ -30,7 +29,7 @@ function image_captcha_help($route_name, RouteMatchInterface $route_match) {
  *   List of font paths.
  */
 function _image_captcha_get_enabled_fonts() {
-  if (ImageCaptchaConstants::IMAGE_CAPTCHA_ERROR_NO_TTF_SUPPORT & _image_captcha_check_setup(FALSE)) {
+  if (CaptchaConstants::IMAGE_CAPTCHA_ERROR_NO_TTF_SUPPORT & _image_captcha_check_setup(FALSE)) {
     return ['BUILTIN'];
   }
   else {
@@ -190,11 +189,11 @@ function _image_captcha_check_setup($check_fonts = TRUE) {
   // We need at least the imagepng function.
   // Note that the imagejpg function is optionally also used, but not required.
   if (!function_exists('imagepng')) {
-    $status = $status | ImageCaptchaConstants::IMAGE_CAPTCHA_ERROR_NO_GDLIB;
+    $status = $status | CaptchaConstants::IMAGE_CAPTCHA_ERROR_NO_GDLIB;
   }
 
   if (!function_exists('imagettftext')) {
-    $status = $status | ImageCaptchaConstants::IMAGE_CAPTCHA_ERROR_NO_TTF_SUPPORT;
+    $status = $status | CaptchaConstants::IMAGE_CAPTCHA_ERROR_NO_TTF_SUPPORT;
   }
 
   if ($check_fonts) {
@@ -208,13 +207,13 @@ function _image_captcha_check_setup($check_fonts = TRUE) {
       // Try again now.
       $fonts = _image_captcha_get_enabled_fonts();
       if (empty($fonts)) {
-        $status = $status | ImageCaptchaConstants::IMAGE_CAPTCHA_ERROR_TTF_FILE_READ_PROBLEM;
+        $status = $status | CaptchaConstants::IMAGE_CAPTCHA_ERROR_TTF_FILE_READ_PROBLEM;
       }
     }
     if (!empty($fonts)) {
       $problem_fonts = _image_captcha_check_fonts($fonts);
       if (count($problem_fonts) != 0) {
-        $status = $status | ImageCaptchaConstants::IMAGE_CAPTCHA_ERROR_TTF_FILE_READ_PROBLEM;
+        $status = $status | CaptchaConstants::IMAGE_CAPTCHA_ERROR_TTF_FILE_READ_PROBLEM;
       }
     }
   }
@@ -257,7 +256,7 @@ function image_captcha_captcha($op, $captcha_type = '', $captcha_sid = NULL) {
     case 'list':
       // Only offer the image CAPTCHA if it is possible to generate an image
       // on this setup.
-      if (!(_image_captcha_check_setup() & ImageCaptchaConstants::IMAGE_CAPTCHA_ERROR_NO_GDLIB)) {
+      if (!(_image_captcha_check_setup() & CaptchaConstants::IMAGE_CAPTCHA_ERROR_NO_GDLIB)) {
         return ['Image'];
       }
       else {

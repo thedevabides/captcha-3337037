@@ -6,6 +6,7 @@ namespace Drupal\captcha\Constants;
  * Constants for the captcha module.
  */
 class CaptchaConstants {
+  // CAPTCHA CONSTANTS:
   // Always add a CAPTCHA (even on every page of a multipage workflow).
   const CAPTCHA_PERSISTENCE_SHOW_ALWAYS = 0;
   // Only one CAPTCHA has to be solved per form instance/multi-step workflow.
@@ -29,5 +30,17 @@ class CaptchaConstants {
 
   // Default captcha field access.
   const CAPTCHA_FIELD_DEFAULT_ACCESS = 1;
+
+  const IMAGE_CAPTCHA_ALLOWED_CHARACTERS = 'aAbBCdEeFfGHhijKLMmNPQRrSTtWXYZ23456789';
+
+  // IMAGE_CAPTCHA CONSTANTS:
+  // Setup status flags.
+  const IMAGE_CAPTCHA_ERROR_NO_GDLIB = 1;
+  const IMAGE_CAPTCHA_ERROR_NO_TTF_SUPPORT = 2;
+  const IMAGE_CAPTCHA_ERROR_TTF_FILE_READ_PROBLEM = 4;
+
+  const IMAGE_CAPTCHA_FILE_FORMAT_JPG = 1;
+  const IMAGE_CAPTCHA_FILE_FORMAT_PNG = 2;
+  const IMAGE_CAPTCHA_FILE_FORMAT_TRANSPARENT_PNG = 3;
 
 }
