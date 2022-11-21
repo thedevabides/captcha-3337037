@@ -55,7 +55,7 @@ class CaptchaImageRefresh extends ControllerBase {
       'message' => '',
     ];
     try {
-      $this->moduleHandler->loadInclude('captcha', 'inc', 'captcha');
+      $this->moduleHandler()->loadInclude('captcha', 'inc', 'captcha');
       $config = $this->config('image_captcha.settings');
       $captcha_sid = _captcha_generate_captcha_session($form_id);
       $captcha_token = Crypt::randomBytesBase64();

@@ -52,22 +52,8 @@ class CaptchaService {
     // We do our own version of Drupal's module_invoke_all() here because
     // we want to build an array with custom keys and values.
     $types = [];
-    if (method_exists($this->moduleHandler, 'invokeAllWith')) {
-      $this->moduleHandler->invokeAllWith('captcha', function (callable $hook, string $module) use (&$types) {
-        if ($type = $hook('list')) {
-          if (!is_array($type)) {
-            $types[$module] = [$type];
-          }
-          else {
-            $types[$module] = $type;
-          }
-        }
-      });
-    }
-    else {
-      // @phpstan-ignore-next-line
-      foreach ($this->moduleHandler->getImplementations('captcha') as $module) {
-        $type = call_user_func_array($module . '_captcha', ['list']);
+    $this->moduleHandler->invokeAllWith('captcha', function (callable $hook, string $module) use (&$types) {
+      if ($type = $hook('list')) {
         if (!is_array($type)) {
           $types[$module] = [$type];
         }
@@ -75,7 +61,7 @@ class CaptchaService {
           $types[$module] = $type;
         }
       }
-    }
+    });
     if (!empty($types)) {
       foreach ($types as $module => $values) {
         foreach ($values as $value) {

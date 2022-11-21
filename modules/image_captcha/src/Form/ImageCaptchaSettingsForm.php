@@ -277,7 +277,7 @@ class ImageCaptchaSettingsForm extends ConfigFormBase {
       foreach ($fonts as $token) {
         $fonts[$token] = $available_fonts[$token];
       }
-      [$readable_fonts, $problem_fonts] = _image_captcha_check_fonts($fonts);
+      $problem_fonts = _image_captcha_check_fonts($fonts);
       if (count($problem_fonts) > 0) {
         $form_state->setErrorByName('image_captcha_fonts', $this->t('The following fonts are not readable: %fonts.', ['%fonts' => implode(', ', $problem_fonts)]));
       }
@@ -399,6 +399,8 @@ class ImageCaptchaSettingsForm extends ConfigFormBase {
       $form['image_captcha_font_size'] = [
         '#type' => 'select',
         '#title' => $this->t('Font size'),
+        // @codingStandardsIgnoreStart
+        // We should not translate "pt", so we ignore the coding standards here:
         '#options' => [
           9 => '9 pt - ' . $this->t('tiny'),
           12 => '12 pt - ' . $this->t('small'),
@@ -409,6 +411,7 @@ class ImageCaptchaSettingsForm extends ConfigFormBase {
           48 => '48 pt',
           64 => '64 pt - ' . $this->t('extra large'),
         ],
+        // @codingStandardsIgnoreEnd
         '#default_value' => (int) $config->get('image_captcha_font_size'),
         '#description' => $this->t('The font size influences the size of the image. Note that larger values make the image generation more CPU intensive.'),
       ];

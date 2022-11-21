@@ -103,19 +103,15 @@ function _image_captcha_get_available_fonts_from_directories($directories = NULL
  *   List($readable_fonts, $problem_fonts).
  */
 function _image_captcha_check_fonts(array $fonts) {
-  $readable_fonts = [];
   $problem_fonts = [];
 
   foreach ($fonts as $font) {
     if ($font != 'BUILTIN' && (!is_file($font) || !is_readable($font))) {
       $problem_fonts[] = $font;
     }
-    else {
-      $readable_fonts[] = $font;
-    }
   }
 
-  return [$readable_fonts, $problem_fonts];
+  return $problem_fonts;
 }
 
 /**
