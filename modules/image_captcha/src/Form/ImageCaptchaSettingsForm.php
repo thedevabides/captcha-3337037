@@ -247,6 +247,20 @@ class ImageCaptchaSettingsForm extends ConfigFormBase {
       '#default_value' => (int) $config->get('image_captcha_noise_level'),
     ];
 
+    $form['image_captcha_text_settings'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Text Content'),
+      '#description' => $this->t('Customize image CAPTCHA text content.'),
+    ];
+    $form['image_captcha_text_settings']['image_captcha_text_refresh'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Refresh button text.'),
+      '#description' => $this->t('Customize the refresh button text.'),
+      '#default_value' => $config->get('image_captcha_text_refresh'),
+      '#size' => 15,
+      '#required' => TRUE,
+    ];
+    // Enter the characters shown in the image.
     return parent::buildForm($form, $form_state);
   }
 

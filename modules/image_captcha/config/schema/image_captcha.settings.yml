@@ -65,3 +65,6 @@ image_captcha.settings:
     image_captcha_noise_level:
       type: integer
       label: 'Noise level'
+    image_captcha_text_refresh:
+      type: label
+      label: 'String with allowed characters'

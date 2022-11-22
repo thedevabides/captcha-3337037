@@ -379,9 +379,9 @@ function image_captcha_after_build_process($element) {
         $is_image_captcha = TRUE;
       }
     }
-
+    $config = \Drupal::config('image_captcha.settings');
     if ($is_image_captcha && isset($element['captcha_widgets']['captcha_image'])) {
-      $uri = Link::fromTextAndUrl(t('Get new captcha!'),
+      $uri = Link::fromTextAndUrl($config->get('image_captcha_text_refresh'),
         new Url('image_captcha.refresh',
           ['form_id' => $form_id],
           ['attributes' => ['class' => ['reload-captcha']]]
