@@ -166,3 +166,22 @@ function captcha_update_8902(&$sandbox) {
     }
   }
 }
+
+
+/**
+ * Implements hook_update_N().
+ *
+ * Handle and delete "add_captcha_description".
+ */
+function captcha_update_8903(&$sandbox) {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('captcha.settings');
+  $addDescription = $config->get('add_captcha_description');
+  // If description was disabled before, set 'description' to an empty string,
+  // so it is disabled again in the newest version:
+  if (!$addDescription) {
+    $config->set('description', '')->save();
+  }
+  // Delete old config:
+  $config->clear('add_captcha_description')->save();
+}

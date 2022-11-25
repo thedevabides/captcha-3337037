@@ -283,4 +283,121 @@ class CaptchaTest extends CaptchaWebTestBase {
     $this->assertCaptchaPresence(TRUE);
   }
 
+  /**
+   * Test if the correct classes from our twig template are set.
+   */
+  public function testFormCorrectClassesSet() {
+    $session = $this->assertSession();
+
+    // Set default challenge math:
+    $this->config('captcha.settings')
+      ->set('default_challenge', 'captcha/Math')
+      ->save();
+
+    // Check if there is a CAPTCHA on the login form (look for the title).
+    $this->drupalGet('user');
+    $this->assertCaptchaPresence(TRUE);
+
+    // Check if the correct classes are set from our template with default
+    // challenge type set:
+    // Check if fieldset exists with correct classes set:
+    $session->elementExists('css', '#user-login-form > fieldset');
+    $session->elementAttributeContains('css', '#user-login-form > fieldset', 'class', 'captcha');
+    $session->elementAttributeContains('css', '#user-login-form > fieldset', 'class', 'captcha-type-challenge--math');
+    // The challenge type should NEVER be 'default'.
+    $session->elementAttributeNotContains('css', '#user-login-form > fieldset', 'class', 'captcha-type-challenge--default');
+
+    // Check if title exists with the correct class and standard title value:
+    $session->elementExists('css', '#user-login-form > fieldset > legend.captcha__title');
+    $session->elementTextContains('css', '#user-login-form > fieldset > legend', 'CAPTCHA');
+
+    // Check if description exists with the correct class and standard title
+    // value:
+    $session->elementExists('css', '#user-login-form > fieldset > div.captcha__description');
+    $session->elementTextContains('css', '#user-login-form > fieldset > div.captcha__description', 'This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.');
+
+    // Check if the element exists with the correct class:
+    $session->elementExists('css', '#user-login-form > fieldset > div.captcha__element');
+
+    // Set challenge type "captcha/Math" explicitly and do the tests again.
+    /** @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
+    $captcha_point = \Drupal::entityTypeManager()
+      ->getStorage('captcha_point')
+      ->load('user_login_form');
+    $captcha_point->setCaptchaType('captcha/Math');
+    $captcha_point->enable()->save();
+
+    $this->drupalGet('user');
+
+    // Check if fieldset exists with correct classes set:
+    $session->elementExists('css', '#user-login-form > fieldset');
+    $session->elementAttributeContains('css', '#user-login-form > fieldset', 'class', 'captcha');
+    $session->elementAttributeContains('css', '#user-login-form > fieldset', 'class', 'captcha-type-challenge--math');
+    // The challenge type should NEVER be 'default'.
+    $session->elementAttributeNotContains('css', '#user-login-form > fieldset', 'class', 'captcha-type-challenge--default');
+
+    // Check if title exists with the correct class and standard title value:
+    $session->elementExists('css', '#user-login-form > fieldset > legend.captcha__title');
+    $session->elementTextContains('css', '#user-login-form > fieldset > legend', 'CAPTCHA');
+
+    // Check if description exists with the correct class and standard title
+    // value:
+    $session->elementExists('css', '#user-login-form > fieldset > div.captcha__description');
+    $session->elementTextContains('css', '#user-login-form > fieldset > div.captcha__description', 'This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.');
+
+    // Check if the element exists with the correct class:
+    $session->elementExists('css', '#user-login-form > fieldset > div.captcha__element');
+  }
+
+  /**
+   * Test if the title element is not present, when title is an empty string.
+   */
+  public function testTitleNotPresent() {
+    $session = $this->assertSession();
+
+    // Set default challenge math:
+    $this->config('captcha.settings')
+      ->set('title', '')
+      ->save();
+
+    $this->drupalGet('user');
+    // Check if the title element does not exist:
+    $session->elementNotExists('css', '#user-login-form > fieldset > legend.captcha__title');
+  }
+
+  /**
+   * Test if the description element is not present, when title is empty.
+   */
+  public function testDescriptionNotPresent() {
+    $session = $this->assertSession();
+
+    // Set default challenge math:
+    $this->config('captcha.settings')
+      ->set('description', '')
+      ->save();
+
+    $this->drupalGet('user');
+    // Check if the title element does not exist:
+    $session->elementNotExists('css', '#user-login-form > fieldset > div.captcha__description');
+  }
+
+  /**
+   * Test if the description and title element is not present, when title empty.
+   */
+  public function testDescriptionAndTitleNotPresent() {
+    $session = $this->assertSession();
+
+    // Set default challenge math:
+    $this->config('captcha.settings')
+      ->set('title', '')
+      ->set('description', '')
+      ->save();
+
+    $this->drupalGet('user');
+    // Check if the title element does not exist:
+    $session->elementNotExists('css', '#user-login-form > fieldset > legend.captcha__title');
+    // Check if the title element does not exist:
+    $session->elementNotExists('css', '#user-login-form > fieldset > div.captcha__description');
+  }
+
 }

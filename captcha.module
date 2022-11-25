@@ -78,6 +78,15 @@ function captcha_theme() {
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function captcha_theme_suggestions_captcha(array $variables) {
+  $suggestions = [];
+  $suggestions[] = 'captcha__' . strtolower($variables['element']['#captcha_type_challenge']);
+  return $suggestions;
+}
+
+/**
  * Implements hook_cron().
  *
  * Remove old entries from captcha_sessions table.
@@ -99,31 +108,19 @@ function captcha_cron() {
  * Render it in a section element if a description of the CAPTCHA
  * is available. Render it as is otherwise.
  */
-function template_preprocess_captcha(&$variables) {
-  $element = $variables['element'];
+function template_preprocess_captcha(&$variables, $hook, $info) {
+  $variables['title'] = _captcha_get_title();
+  $variables['description'] = _captcha_get_description();
 
-  if (!empty($element['#description']) && isset($element['captcha_widgets'])) {
-    $children_keys = Element::children($element);
-    $captcha_children_output = '';
-    foreach ($children_keys as $key) {
-      if (!empty($element[$key])) {
-        $captcha_children_output .= \Drupal::service('renderer')->render($element[$key]);
-      }
-    }
-
-    $variables['details'] = [
-      '#type' => 'details',
-      '#title' => t('CAPTCHA'),
-      '#description' => $element['#description'],
-      '#children' => Markup::create($captcha_children_output),
-      '#attributes' => [
-        'id' => 'captcha',
-        'class' => ['captcha'],
-        'open' => [''],
-      ],
-      '#open' => TRUE,
-    ];
-  }
+  // Add an indicator, if the captcha widget is visible, to
+  // account for _captcha_required_for_user().
+  // See Captcha::preRenderProcess().
+  // If the CAPTCHA was solved, hidden inputs have to be preserved to the form
+  // but the CAPTCHA and its wrappers are not visible.
+  // This variable exposed this to the theme layer transparently:
+  $variables['is_visible'] = isset($variables['element']['captcha_widgets']);
+  // Attach library
+  $variables['#attached']['library'][] = 'captcha/base';
 }
 
 /**
@@ -197,11 +194,6 @@ function captcha_form_alter(array &$form, FormStateInterface $form_state, $form_
           '#type' => 'captcha',
           '#captcha_type' => $captcha_point->getCaptchaType(),
         ];
-
-        // Add a CAPTCHA description if required.
-        if ($config->get('add_captcha_description')) {
-          $captcha_element['#description'] = _captcha_get_description();
-        }
 
         // Get placement in form and insert in form.
         if ($captcha_placement = _captcha_get_captcha_placement($form_id, $form)) {

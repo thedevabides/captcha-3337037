@@ -28,6 +28,9 @@ captcha.settings:
     description:
       type: label
       label: 'The default captcha description.'
+    title:
+      type: label
+      label: 'The default captcha title.'
     administration_mode:
       type: boolean
       label: 'Add CAPTCHA administration links to forms'
@@ -37,9 +40,6 @@ captcha.settings:
     whitelist_ips:
       type: string
       label: 'IP addresses list'
-    add_captcha_description:
-      type: boolean
-      label: 'Add a description to the CAPTCHA'
     wrong_captcha_response_message:
       type: label
       label: 'The error message when a user has entered an incorrect CAPTCHA answer.'

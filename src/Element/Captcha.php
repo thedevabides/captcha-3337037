@@ -218,6 +218,9 @@ class Captcha extends FormElement implements ContainerFactoryPluginInterface {
       // Set the theme function.
       $element['#theme'] = 'captcha';
 
+      // Provide the captcha type:
+      $element['#captcha_type_challenge'] = $captcha_type_challenge;
+
       // Add pre_render callback for additional CAPTCHA processing.
       if (!isset($element['#pre_render'])) {
         $element['#pre_render'] = [];

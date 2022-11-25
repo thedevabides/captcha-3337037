@@ -146,6 +146,7 @@ class CaptchaService {
           $form_stepper[$k] = $v;
         }
       }
+
     }
   }
 

@@ -1,10 +1,10 @@
 base:
   version: 1.0
   js:
-    image_captcha.js: {}
+    js/image_captcha.js: {}
   css:
     theme:
-      image_captcha.css: {}
+      css/image_captcha.css: {}
   dependencies:
     - core/jquery
     - core/drupal
@@ -17,7 +17,18 @@ image-captcha-refresh:
     js/image_captcha_refresh.js: {}
   css:
     theme:
-      image_captcha_refresh.css: {}
+      css/image_captcha_refresh.css: {}
   dependencies:
     - core/jquery
     - core/drupal
+    - image_captcha/base
+
+admin:
+  version: 1.0
+  js:
+    js/admin.image_captcha.js: {}
+  css:
+    theme:
+      css/admin.image_captcha.css: {}
+  dependencies:
+    - image_captcha/base

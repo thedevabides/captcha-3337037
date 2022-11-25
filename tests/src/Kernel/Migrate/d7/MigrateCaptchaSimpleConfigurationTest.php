@@ -28,7 +28,6 @@ class MigrateCaptchaSimpleConfigurationTest extends MigrateDrupal7TestBase {
       'description' => 'This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.',
       'administration_mode' => TRUE,
       'allow_on_admin_pages' => FALSE,
-      'add_captcha_description' => TRUE,
       'default_validation' => 1,
       'persistence' => 1,
       'enable_stats' => TRUE,

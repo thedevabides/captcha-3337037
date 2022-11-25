@@ -80,7 +80,7 @@ class ImageCaptchaSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('image_captcha.settings');
     // Add CSS and JS for theming and added usability on admin form.
-    $form['#attached']['library'][] = 'image_captcha/base';
+    $form['#attached']['library'][] = 'image_captcha/admin';
 
     // First some error checking.
     $setup_status = _image_captcha_check_setup(FALSE);
@@ -407,7 +407,7 @@ class ImageCaptchaSettingsForm extends ConfigFormBase {
           ]
         ),
         '#options' => $available_fonts,
-        '#attributes' => ['class' => ['image_captcha_admin_fonts_selection']],
+        '#attributes' => ['class' => ['image-captcha-admin-fonts-selection']],
       ];
 
       $form['image_captcha_font_size'] = [

@@ -15,7 +15,6 @@
    *  Attaches the outline behavior to the right context.
    */
   Drupal.behaviors.CaptchaRefresh = {
-
     attach: function (context) {
       $('.reload-captcha', context).not('.processed').bind('click', function () {
         $(this).addClass('processed');
@@ -24,7 +23,7 @@
         var date = new Date();
         var url = $(this).attr('href') + '?' + date.getTime();
         // Adding loader.
-        $('.captcha').append('<div class="image_captcha_refresh_loader"></div>');
+        $('.captcha').addClass('captcha--loading');
         $.get(
           url,
           {},
@@ -33,7 +32,7 @@
               $('.captcha', $form).find('img').attr('src', response.data.url);
               $('input[name=captcha_sid]', $form).val(response.data.sid);
               $('input[name=captcha_token]', $form).val(response.data.token);
-              $('.captcha .image_captcha_refresh_loader').remove();
+              $('.captcha').removeClass('captcha--loading');
             }
             else {
               alert(response.message);

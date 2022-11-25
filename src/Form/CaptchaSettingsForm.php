@@ -170,27 +170,20 @@ class CaptchaSettingsForm extends ConfigFormBase {
       '#submit' => ['::clearCaptchaPlacementCacheSubmit'],
     ];
 
-    // Configuration option for adding a CAPTCHA description.
-    $form['add_captcha_description'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Add a description to the CAPTCHA'),
-      '#description' => $this->t('Add a configurable description to explain the purpose of the CAPTCHA to the visitor.'),
-      '#default_value' => $config->get('add_captcha_description'),
+    $form['title'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Challenge title'),
+      '#description' => $this->t('Configure the title for the CAPTCHA form. Leave empty to show no title. Default: "@title_default"', ['@title_default' => $this->t('CAPTCHA')]),
+      '#default_value' => _captcha_get_title(),
+      '#maxlength' => 256,
     ];
+
     $form['description'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Challenge description'),
-      '#description' => $this->t('Configurable description of the CAPTCHA. An empty entry will reset the description to default.'),
+      '#description' => $this->t('Configurable description of the CAPTCHA. Leave empty to show no description. Default: "@description_default"', ['@description_default' => $this->t('This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.')]),
       '#default_value' => _captcha_get_description(),
       '#maxlength' => 256,
-      '#attributes' => ['id' => 'edit-captcha-description-wrapper'],
-      '#states' => [
-        'visible' => [
-          ':input[name="add_captcha_description"]' => [
-            'checked' => TRUE,
-          ],
-        ],
-      ],
     ];
 
     // Field for the wrong captcha response error message.
@@ -327,9 +320,9 @@ class CaptchaSettingsForm extends ConfigFormBase {
     // Whitelisted ip addresses and ranges.
     $config->set('whitelist_ips', $form_state->getValue('whitelist_ips'));
 
-    // CAPTCHA description stuff.
-    $config->set('add_captcha_description', $form_state->getValue('add_captcha_description'));
-    // Save (or reset) the CAPTCHA descriptions.
+    // Save the CAPTCHA title:
+    $config->set('title', $form_state->getValue('title'));
+    // Save the CAPTCHA description:
     $config->set('description', $form_state->getValue('description'));
 
     $config->set('wrong_captcha_response_message', $form_state->getValue('wrong_captcha_response_message'));

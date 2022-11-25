@@ -6,7 +6,6 @@ migration_tags:
 source:
   plugin: variable
   variables:
-    - captcha_add_captcha_description
     - captcha_administration_mode
     - captcha_allow_on_admin_pages
     - captcha_default_challenge
@@ -25,7 +24,6 @@ process:
   description: captcha_description
   administration_mode: captcha_administration_mode
   allow_on_admin_pages: captcha_allow_on_admin_pages
-  add_captcha_description: captcha_add_captcha_description
   default_validation: captcha_default_validation
   persistence: captcha_persistence
   enable_stats: captcha_enable_stats

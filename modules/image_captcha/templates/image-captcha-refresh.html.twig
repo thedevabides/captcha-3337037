@@ -14,6 +14,6 @@
  */
 #}
 {{ attach_library('image_captcha/image-captcha-refresh') }}
-<div class="reload-captcha-wrapper">
+<div class="reload-captcha-wrapper" title="{{ 'Generate new CAPTCHA image'|t }}">
     {{captcha_refresh_link}}
 </div>

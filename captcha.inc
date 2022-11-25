@@ -169,6 +169,17 @@ function _captcha_required_for_user($captcha_sid, $form_id) {
 }
 
 /**
+ * Get the CAPTCHA title.
+ *
+ * @return string
+ *   CAPTCHA title.
+ */
+function _captcha_get_title() {
+  $title = \Drupal::config('captcha.settings')->get('title');
+  return Xss::filter($title);
+}
+
+/**
  * Get the CAPTCHA description.
  *
  * @return string

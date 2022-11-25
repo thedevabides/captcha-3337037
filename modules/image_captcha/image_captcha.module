@@ -284,11 +284,17 @@ function image_captcha_captcha($op, $captcha_type = '', $captcha_sid = NULL) {
         $result = [];
 
         $result['solution'] = $code;
+        // Add CAPTCHA image wrapper (holds the refresh button + the image
+        // itself)
+        $result['form']['captcha_image_wrapper'] = [
+          '#type' => 'container',
+          '#attributes' => ['class' => ['captcha__image-wrapper']],
+        ];
         // Generate image source URL (add timestamp to avoid problems with
         // client side caching: subsequent images of the same CAPTCHA session
         // have the same URL, but should display a different code).
         [$width, $height] = _image_captcha_image_size($code);
-        $result['form']['captcha_image'] = [
+        $result['form']['captcha_image_wrapper']['captcha_image'] = [
           '#theme' => 'image',
           '#uri' => Url::fromRoute('image_captcha.generator', [
             'session_id' => $captcha_sid,
@@ -380,19 +386,19 @@ function image_captcha_after_build_process($element) {
         $is_image_captcha = TRUE;
       }
     }
-    $config = \Drupal::config('image_captcha.settings');
-    if ($is_image_captcha && isset($element['captcha_widgets']['captcha_image'])) {
-      $uri = Link::fromTextAndUrl($config->get('image_captcha_text_refresh'),
+    if ($is_image_captcha && isset($element['captcha_widgets']['captcha_image_wrapper']['captcha_image'])) {
+      $uri = Link::fromTextAndUrl(t('Get new captcha!'),
         new Url('image_captcha.refresh',
           ['form_id' => $form_id],
           ['attributes' => ['class' => ['reload-captcha']]]
         )
       );
-      $element['captcha_widgets']['captcha_refresh'] = [
+      $element['captcha_widgets']['captcha_image_wrapper']['captcha_refresh'] = [
         '#theme' => 'image_captcha_refresh',
         '#captcha_refresh_link' => $uri,
       ];
     }
+
   }
   return $element;
 }
