@@ -1,7 +1,5 @@
 base:
-  version: 1.0
-  js:
-    js/image_captcha.js: {}
+  version: VERSION
   css:
     theme:
       css/image_captcha.css: {}
@@ -12,7 +10,7 @@ base:
     - core/jquery.once
 
 image-captcha-refresh:
-  version: 1.0
+  version: VERSION
   js:
     js/image_captcha_refresh.js: {}
   css:
@@ -24,7 +22,7 @@ image-captcha-refresh:
     - image_captcha/base
 
 admin:
-  version: 1.0
+  version: VERSION
   js:
     js/admin.image_captcha.js: {}
   css:
@@ -32,3 +30,4 @@ admin:
       css/admin.image_captcha.css: {}
   dependencies:
     - image_captcha/base
+
