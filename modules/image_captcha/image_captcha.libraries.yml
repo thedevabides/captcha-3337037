@@ -7,7 +7,6 @@ base:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-    - core/jquery.once
 
 image-captcha-refresh:
   version: VERSION
