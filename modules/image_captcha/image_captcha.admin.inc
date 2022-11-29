@@ -63,8 +63,6 @@ function image_captcha_font_preview($font_token) {
   $response->headers->set('Content-Type', 'image/png');
   // Dump image data to client.
   imagepng($image);
-  // Release image memory.
-  imagedestroy($image);
 
   // Close connection.
   exit();

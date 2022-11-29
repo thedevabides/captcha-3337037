@@ -3,6 +3,7 @@ type: module
 description: Provides an image based CAPTCHA.
 package: Spam control
 core_version_requirement: '^9.4 || ^10'
+php: ^8.0
 dependencies:
   - captcha:captcha
 configure: admin/config/people/captcha/image_captcha

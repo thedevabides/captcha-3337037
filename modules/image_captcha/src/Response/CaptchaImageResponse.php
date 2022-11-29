@@ -123,8 +123,6 @@ class CaptchaImageResponse extends Response {
     else {
       imagepng($this->image);
     }
-    // Clean up the image resource.
-    imagedestroy($this->image);
   }
 
   /**
@@ -285,7 +283,6 @@ class CaptchaImageResponse extends Response {
           }
         }
       }
-      imagedestroy($image);
       return $distorted_image;
     }
     else {
