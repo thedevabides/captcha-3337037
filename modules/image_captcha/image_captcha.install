@@ -58,3 +58,25 @@ function image_captcha_update_8001() {
   }
   $config->save(TRUE);
 }
+
+/**
+ * Fix possibly broken image_captcha fonts path after 8.x-1.7 update.
+ */
+function image_captcha_update_9001(&$sandbox) {
+  // Reset the font path from the correct module directory location:
+  $config = \Drupal::configFactory()->getEditable('image_captcha.settings');
+  $module_path = \Drupal::service('extension.list.module')->getPath('image_captcha');
+  $config->set('image_captcha_fonts', [
+    hash('sha256', $module_path . '/fonts/Tesox/tesox.ttf'),
+    hash('sha256', $module_path . '/fonts/Tuffy/Tuffy.ttf'),
+  ])->save(TRUE);
+}
+
+/**
+ * Set captcha 'title' default, as the setting did not exist before.
+ */
+function image_captcha_update_9002(&$sandbox) {
+  // Reset the font path from the correct module directory location:
+  $config = \Drupal::configFactory()->getEditable('image_captcha.settings');
+  $config->set('title', 'CAPTCHA')->save(TRUE);
+}

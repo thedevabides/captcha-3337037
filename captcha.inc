@@ -176,6 +176,9 @@ function _captcha_required_for_user($captcha_sid, $form_id) {
  */
 function _captcha_get_title() {
   $title = \Drupal::config('captcha.settings')->get('title');
+  if ($title === NULL) {
+    return '';
+  }
   return Xss::filter($title);
 }
 
@@ -187,6 +190,9 @@ function _captcha_get_title() {
  */
 function _captcha_get_description() {
   $description = \Drupal::config('captcha.settings')->get('description');
+  if ($description === NULL) {
+    return '';
+  }
   return Xss::filter($description);
 }
 
