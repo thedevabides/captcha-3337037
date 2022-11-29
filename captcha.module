@@ -19,7 +19,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Site\Settings;
 use Drupal\captcha\Constants\CaptchaConstants;
-use Drupal\catpcha\Exception\CaptchaValidationNullException;
 
 /**
  * Implements hook_help().
@@ -149,7 +148,7 @@ function captcha_form_alter(array &$form, FormStateInterface $form_state, $form_
 
     if (!empty($entity_ids) && is_array($entity_ids)) {
       $captcha_point_id = array_pop($entity_ids);
-      /** @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
+      /** @var \Drupal\captcha\CaptchaPointInterface $captcha_point */
       $captcha_point = \Drupal::entityTypeManager()
         ->getStorage('captcha_point')
         ->load($captcha_point_id);
@@ -161,6 +160,7 @@ function captcha_form_alter(array &$form, FormStateInterface $form_state, $form_
       if ($form_object instanceof BaseFormIdInterface) {
         $base_form_id = $form_object->getBaseFormId();
         if (!empty($base_form_id) && $base_form_id != $form_id) {
+          /** @var \Drupal\captcha\CaptchaPointInterface $captcha_point */
           $captcha_point = \Drupal::entityTypeManager()
             ->getStorage('captcha_point')
             ->load($base_form_id);
@@ -170,6 +170,7 @@ function captcha_form_alter(array &$form, FormStateInterface $form_state, $form_
 
     if (empty($captcha_point) && $config->get('enabled_default')) {
       // Create fake captcha point without saving.
+      /** @var \Drupal\captcha\CaptchaPointInterface $captcha_point */
       $captcha_point = new CaptchaPoint([
         'formId' => $form_id,
         'captchaType' => $config->get('default_challenge'),
@@ -205,7 +206,7 @@ function captcha_form_alter(array &$form, FormStateInterface $form_state, $form_
       ->isAdminRoute() || $config->get('allow_on_admin_pages'))
   ) {
     // Add CAPTCHA administration tools.
-    /** @var \Drupal\captcha\Entity\CaptchaPoint $captcha_point */
+    /** @var \Drupal\captcha\CaptchaPointInterface $captcha_point */
     $captcha_point = CaptchaPoint::load($form_id);
 
     // For administrators: show CAPTCHA info and offer link to configure it.
@@ -293,9 +294,6 @@ function captcha_form_alter(array &$form, FormStateInterface $form_state, $form_
  *   TRUE when case insensitive equal, FALSE otherwise.
  */
 function captcha_validate_strict_equality($solution, $response) {
-  if ($solution == NULL || $response == NULL) {
-    throw new CaptchaValidationNullException('Error: Solution or Response is NULL!');
-  }
   return $solution === $response;
 }
 
@@ -312,7 +310,8 @@ function captcha_validate_strict_equality($solution, $response) {
  */
 function captcha_validate_case_insensitive_equality($solution, $response) {
   if ($solution == NULL || $response == NULL) {
-    throw new CaptchaValidationNullException('Error: Solution or Response is NULL!');
+    // mb_strtolower wouldn't work on NULL and NULL is never a valid solution.
+    return FALSE;
   }
   return mb_strtolower($solution) === mb_strtolower($response);
 }
@@ -330,7 +329,8 @@ function captcha_validate_case_insensitive_equality($solution, $response) {
  */
 function captcha_validate_ignore_spaces($solution, $response) {
   if ($solution == NULL || $response == NULL) {
-    throw new CaptchaValidationNullException('Error: Solution or Response is NULL!');
+    // preg_replace wouldn't work on NULL and NULL is never a valid solution.
+    return FALSE;
   }
   return preg_replace('/\s/', '', $solution) === preg_replace('/\s/', '', $response);
 }
@@ -348,7 +348,8 @@ function captcha_validate_ignore_spaces($solution, $response) {
  */
 function captcha_validate_case_insensitive_ignore_spaces($solution, $response) {
   if ($solution == NULL || $response == NULL) {
-    throw new CaptchaValidationNullException('Error: Solution or Response is NULL!');
+    // preg_replace wouldn't work on NULL and NULL is never a valid solution.
+    return FALSE;
   }
   return preg_replace('/\s/', '', mb_strtolower($solution)) === preg_replace('/\s/', '', mb_strtolower($response));
 }

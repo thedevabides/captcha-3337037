@@ -5,7 +5,7 @@ captcha_settings:
 
 captcha_examples:
   route_name: captcha_examples
-  title: 'CAPTCHA examples'
+  title: 'CAPTCHA Examples'
   base_route: captcha_settings
 
 captcha_points.list:
