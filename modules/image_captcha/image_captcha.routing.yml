@@ -23,7 +23,7 @@ image_captcha.generator:
 image_captcha.refresh:
   path: '/image-captcha-refresh/{form_id}'
   defaults:
-    _controller: '\Drupal\image_captcha\Controller\CaptchaImageRefresh::refreshCaptcha'
+    _controller: '\Drupal\image_captcha\Controller\CaptchaImageRefreshController::refreshCaptcha'
   requirements:
     # Allow access, because anybody is allowed to refresh the image captcha:
     _access: 'TRUE'

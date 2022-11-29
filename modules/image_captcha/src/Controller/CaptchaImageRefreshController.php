@@ -16,9 +16,9 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\image_captcha\Constants\ImageCaptchaConstants;
 
 /**
- * Description of CaptchaImageRefresh.
+ * Description of CaptchaImageRefreshController.
  */
-class CaptchaImageRefresh extends ControllerBase {
+class CaptchaImageRefreshController extends ControllerBase {
 
   /**
    * Obtaining system time.
