@@ -15,8 +15,6 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
-use Drupal\Core\Render\Element;
-use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Site\Settings;
@@ -39,7 +37,7 @@ function captcha_help($route_name, RouteMatchInterface $route_match) {
       return ['#markup' => $output];
 
     case 'captcha_settings':
-      $output = '<p>' . t('A CAPTCHA can be added to virtually each Drupal form. Some default forms are already provided in the form list, but arbitrary forms can be easily added and managed when the option <em>Add CAPTCHA administration links to forms</em> is enabled.') . '</p>';
+      $output = '<p>' . t('A CAPTCHA can be added to virtually any Drupal form, through adding an affiliated <em>CAPTCHA Point</em>. Some default <em>CAPTCHA Points</em> are already provided in the <em>CAPTCHA Point</em> section, but arbitrary forms can be easily added and managed.') . '</p>';
       $output .= '<p>' . t('Users with the <em>Skip CAPTCHA</em> <a href=":perm">permission</a> won\'t be offered a challenge. Be sure to grant this permission to the trusted users (e.g. site administrators). If you want to test a protected form, be sure to do it as a user without the <em>Skip CAPTCHA</em> permission (e.g. as anonymous user).', [
         ':perm' => Url::fromRoute('user.admin_permissions')->toString(),
       ]) . '</p>';

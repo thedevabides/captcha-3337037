@@ -102,38 +102,30 @@ class CaptchaSettingsForm extends ConfigFormBase {
     $config = $this->config('captcha.settings');
     $this->moduleHandler->loadInclude('captcha', 'inc');
 
-    // Configuration of which forms to protect, with what challenge.
-    $form['form_protection'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Form protection'),
-      '#description' => $this->t("Select the challenge type you want for each of the listed forms (identified by their so called <em>form_id</em>'s). You can easily add arbitrary forms with the textfield at the bottom of the table or with the help of the option <em>Add CAPTCHA administration links to forms</em> below."),
-      '#open' => TRUE,
-    ];
-
-    $form['form_protection']['default_challenge'] = [
+    $form['default_challenge'] = [
       '#type' => 'select',
       '#title' => $this->t('Default challenge type'),
-      '#description' => $this->t('Select the default challenge type for CAPTCHAs. This can be overridden for each form if desired.'),
+      '#description' => $this->t('Select the default <em>CAPTCHA Point</em> challenge type. This can be overridden for each <em>CAPTCHA Point</em> individually.'),
       '#options' => $this->captchaService->getAvailableChallengeTypes(FALSE),
       '#default_value' => $config->get('default_challenge'),
     ];
 
     // Option for enabling CAPTCHA for all forms.
-    $form['form_protection']['enabled_default'] = [
+    $form['enabled_default'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Default challenge on non-listed forms.'),
-      '#description' => $this->t('Enable CAPTCHA for every form not listed here'),
+      '#title' => $this->t('Enable CAPTCHA challenges on all forms'),
+      '#description' => $this->t('Note, that the captcha point <em>default challenge</em> will be used as the challenge type for the created CAPTCHA challenges.'),
       '#default_value' => $config->get('enabled_default'),
     ];
     // Field for the CAPTCHA administration mode.
-    $form['form_protection']['administration_mode'] = [
+    $form['administration_mode'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Add CAPTCHA administration links to forms'),
       '#default_value' => $config->get('administration_mode'),
       '#description' => $this->t('This option makes it easy to manage CAPTCHA settings on forms. When enabled, users with the <em>administer CAPTCHA settings</em> permission will see a fieldset with CAPTCHA administration links on all forms, except on administrative pages.'),
     ];
     // Field for the CAPTCHAs on admin pages.
-    $form['form_protection']['allow_on_admin_pages'] = [
+    $form['allow_on_admin_pages'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow CAPTCHAs and CAPTCHA administration links on administrative pages'),
       '#default_value' => $config->get('allow_on_admin_pages'),
@@ -141,30 +133,30 @@ class CaptchaSettingsForm extends ConfigFormBase {
     ];
 
     // Adding configuration for ip protection.
-    $form['form_protection']['whitelist_ips_settings'] = [
+    $form['whitelist_ips_settings'] = [
       '#type' => 'details',
       '#title' => $this->t('Whitelisted IP Addresses'),
-      '#description' => $this->t('Enter the IP addresses or IP address ranges you want to skip all CAPTCHAs on this site.'),
+      '#description' => $this->t('Enter the IP addresses or IP address ranges you wish to whitelist. All CAPTCHA challenges will be skipped for these IP adresses.'),
       '#open' => !empty($config->get('whitelist_ips')),
     ];
 
     $ip_address = $this->requestStack->getCurrentRequest()->getClientIp();
-    $form['form_protection']['whitelist_ips_settings']['whitelist_ips'] = [
+    $form['whitelist_ips_settings']['whitelist_ips'] = [
       '#title' => $this->t('IP addresses list'),
       '#type' => 'textarea',
       '#required' => FALSE,
       '#default_value' => $config->get('whitelist_ips'),
-      '#description' => $this->t('Enter one per single line IP-address in format XXX.XXX.XXX.XXX, or IP-address range in format XXX.XXX.XXX.YYY-XXX.XXX.XXX.ZZZ. No spaces allowed. Your current IP address is %ip_address.', ['%ip_address' => $ip_address]),
+      '#description' => $this->t('Enter one IP-address per row in the format XXX.XXX.XXX.XXX. Alternatively you can also define IP-address ranges per row in the format XXX.XXX.XXX.YYY-XXX.XXX.XXX.ZZZ. No spaces allowed. Your current IP address is %ip_address.', ['%ip_address' => $ip_address]),
     ];
 
     // Button for clearing the CAPTCHA placement cache.
     // Based on Drupal core's "Clear all caches" (performance settings page).
-    $form['form_protection']['placement_caching'] = [
+    $form['placement_caching'] = [
       '#type' => 'item',
       '#title' => $this->t('CAPTCHA placement caching'),
       '#description' => $this->t('For efficiency, the positions of the CAPTCHA elements in each of the configured forms are cached. Most of the time, the structure of a form does not change and it would be a waste to recalculate the positions every time. Occasionally however, the form structure can change (e.g. during site building) and clearing the CAPTCHA placement cache can be required to fix the CAPTCHA placement.'),
     ];
-    $form['form_protection']['placement_caching']['placement_cache_clear'] = [
+    $form['placement_caching']['placement_cache_clear'] = [
       '#type' => 'submit',
       '#value' => $this->t('Clear the CAPTCHA placement cache'),
       '#submit' => ['::clearCaptchaPlacementCacheSubmit'],
