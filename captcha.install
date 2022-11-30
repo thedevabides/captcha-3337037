@@ -167,7 +167,6 @@ function captcha_update_8902(&$sandbox) {
   }
 }
 
-
 /**
  * Implements hook_update_N().
  *

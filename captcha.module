@@ -116,7 +116,7 @@ function template_preprocess_captcha(&$variables, $hook, $info) {
   // but the CAPTCHA and its wrappers are not visible.
   // This variable exposed this to the theme layer transparently:
   $variables['is_visible'] = isset($variables['element']['captcha_widgets']);
-  // Attach library
+  // Attach library:
   $variables['#attached']['library'][] = 'captcha/base';
 }
 
@@ -684,7 +684,7 @@ function captcha_captcha($op, $captcha_type = '') {
 /**
  * Parse values of whitelist ip addresses and ranges.
  *
- * @param string $whitelist_ips_value
+ * @param string|null $whitelist_ips_value
  *   Contains list of ip addresses and ranges set one per line.
  *
  * @return array

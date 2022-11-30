@@ -29,4 +29,3 @@ admin:
       css/admin.image_captcha.css: {}
   dependencies:
     - image_captcha/base
-

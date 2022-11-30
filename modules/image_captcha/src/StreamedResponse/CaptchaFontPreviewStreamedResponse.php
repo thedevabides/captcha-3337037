@@ -27,7 +27,7 @@ class CaptchaFontPreviewStreamedResponse extends StreamedResponse {
   /**
    * {@inheritdoc}
    */
-  public function __construct(ImmutableConfig $config, $token, $callback = NULL, $status = 200, $headers = []) {
+  public function __construct(ImmutableConfig $config, $token, $status = 200, $headers = []) {
     parent::__construct(NULL, $status, $headers);
 
     $this->config = $config;
@@ -37,7 +37,7 @@ class CaptchaFontPreviewStreamedResponse extends StreamedResponse {
   /**
    * {@inheritdoc}
    */
-  public function sendContent() {
+  public function sendContent(): static {
     // Get the font from the given font token.
     if ($this->token == 'BUILTIN') {
       $font = 'BUILTIN';
@@ -46,14 +46,15 @@ class CaptchaFontPreviewStreamedResponse extends StreamedResponse {
       // Get the mapping of font tokens to font file objects.
       $fonts = $this->config->get('image_captcha_fonts_preview_map_cache');
       if (!isset($fonts[$this->token])) {
-        return 'bad token';
+        throw new \LogicException('bad token');
       }
       // Get the font path.
       $font = $fonts[$this->token]['uri'];
       // Some sanity checks if the given font is valid.
       if (!is_file($font) || !is_readable($font)) {
-        return 'bad font';
+        throw new \LogicException('bad font');
       }
+      return $this;
     }
 
     // Settings of the font preview.
@@ -83,6 +84,7 @@ class CaptchaFontPreviewStreamedResponse extends StreamedResponse {
     $this->headers->set('Content-Type', 'image/png');
     // Dump image data to client.
     imagepng($image);
+    return $this;
   }
 
 }

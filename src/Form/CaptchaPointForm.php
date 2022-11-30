@@ -113,13 +113,16 @@ class CaptchaPointForm extends EntityForm {
       $this->messenger()->addMessage($this->t('Captcha Point for %form_id form was created.', [
         '%form_id' => $captcha_point->getFormId(),
       ]));
+      $form_state->setRedirect('captcha_point.list');
+      return SAVED_NEW;
     }
     else {
       $this->messenger()->addMessage($this->t('Captcha Point for %form_id form was updated.', [
         '%form_id' => $captcha_point->getFormId(),
       ]));
+      $form_state->setRedirect('captcha_point.list');
+      return SAVED_UPDATED;
     }
-    $form_state->setRedirect('captcha_point.list');
   }
 
 }

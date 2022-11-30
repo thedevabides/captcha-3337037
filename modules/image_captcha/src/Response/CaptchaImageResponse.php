@@ -57,7 +57,7 @@ class CaptchaImageResponse extends Response {
   /**
    * {@inheritdoc}
    */
-  public function __construct(Config $config, LoggerInterface $logger, Connection $connection, FileSystemInterface $fileSystem, $callback = NULL, $status = 200, $headers = []) {
+  public function __construct(Config $config, LoggerInterface $logger, Connection $connection, FileSystemInterface $fileSystem, $status = 200, $headers = []) {
     parent::__construct(NULL, $status, $headers);
 
     $this->config = $config;
@@ -69,7 +69,7 @@ class CaptchaImageResponse extends Response {
   /**
    * {@inheritdoc}
    */
-  public function prepare(Request $request) {
+  public function prepare(Request $request): static {
     $session_id = $request->get('session_id');
 
     $code = $this->connection
@@ -93,7 +93,7 @@ class CaptchaImageResponse extends Response {
   /**
    * {@inheritdoc}
    */
-  public function sendHeaders() {
+  public function sendHeaders(): static {
     if ($this->config->get('image_captcha_file_format') == ImageCaptchaConstants::IMAGE_CAPTCHA_FILE_FORMAT_JPG) {
       $this->headers->set('content-type', 'image/jpeg');
     }
@@ -108,9 +108,9 @@ class CaptchaImageResponse extends Response {
   /**
    * {@inheritdoc}
    */
-  public function sendContent() {
+  public function sendContent(): static {
     if (!$this->image) {
-      return;
+      return $this;
     }
 
     // Begin capturing the byte stream.
@@ -123,6 +123,7 @@ class CaptchaImageResponse extends Response {
     else {
       imagepng($this->image);
     }
+    return $this;
   }
 
   /**

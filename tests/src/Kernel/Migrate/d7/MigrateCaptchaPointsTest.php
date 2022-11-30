@@ -57,9 +57,6 @@ class MigrateCaptchaPointsTest extends MigrateDrupal7TestBase {
       'd7_captcha_points',
     ];
     $this->executeMigrations($migrations);
-
-    $this->captchaStorage = $this->container->get('entity_type.manager')
-      ->getStorage('captcha_point');
   }
 
   /**
