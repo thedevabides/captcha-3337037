@@ -5,7 +5,6 @@
  * Installation/uninstallation related functions for the image_captcha module.
  */
 
-
 /**
  * Implements hook_requirements().
  */

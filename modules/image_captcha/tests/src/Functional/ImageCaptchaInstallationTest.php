@@ -5,11 +5,11 @@ namespace Drupal\Tests\image_captcha\Functional;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * This class provides methods specifically for testing something.
+ * This class provides methods specifically for testing the installation.
  *
  * @group image_captcha
  */
-class ImageCaptchaFunctionalTest extends BrowserTestBase {
+class ImageCaptchaInstallationTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
@@ -17,7 +17,6 @@ class ImageCaptchaFunctionalTest extends BrowserTestBase {
   protected static $modules = [
     'node',
     'test_page_test',
-    'image_captcha',
   ];
 
   /**
@@ -58,6 +57,22 @@ class ImageCaptchaFunctionalTest extends BrowserTestBase {
    */
   public function testInstallation() {
     $session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+    // As simply adding the module to the $modules array only installs required
+    // modules one by one, we also need to test installing both captcha and
+    // image captcha at once:
+    $this->drupalGet('/admin/modules');
+    $page->checkField('edit-modules-image-captcha-enable');
+    $page->pressButton('edit-submit');
+    // Also install required modules:
+    $session->statusCodeEquals(200);
+    $session->pageTextContains('Some required modules must be enabled');
+    $session->pageTextContains('You must enable the CAPTCHA module to install Image CAPTCHA.');
+    // Continue:
+    $page->pressButton('edit-submit');
+    $session->statusCodeEquals(200);
+    $session->pageTextContains('2 modules have been enabled: Image CAPTCHA, CAPTCHA');
+    // Go to front page and see if the site isn't broken:
     $this->drupalGet('<front>');
     // Ensure the status code is success:
     $session->statusCodeEquals(200);
@@ -69,9 +84,21 @@ class ImageCaptchaFunctionalTest extends BrowserTestBase {
    * Tests if uninstalling the module, won't break the site.
    */
   public function testUninstallation() {
-    // Go to uninstallation page an uninstall image_captcha:
     $session = $this->assertSession();
     $page = $this->getSession()->getPage();
+    // Installation process:
+    $this->drupalGet('/admin/modules');
+    $page->checkField('edit-modules-image-captcha-enable');
+    $page->pressButton('edit-submit');
+    // Also install required modules:
+    $session->statusCodeEquals(200);
+    $session->pageTextContains('Some required modules must be enabled');
+    $session->pageTextContains('You must enable the CAPTCHA module to install Image CAPTCHA.');
+    // Continue:
+    $page->pressButton('edit-submit');
+    $session->statusCodeEquals(200);
+    $session->pageTextContains('2 modules have been enabled: Image CAPTCHA, CAPTCHA');
+    // Go to uninstallation page an uninstall image_captcha:
     $this->drupalGet('/admin/modules/uninstall');
     $session->statusCodeEquals(200);
     $page->checkField('edit-uninstall-image-captcha');
@@ -87,17 +114,6 @@ class ImageCaptchaFunctionalTest extends BrowserTestBase {
     $session->statusCodeEquals(200);
     // Ensure the correct test page is loaded as front page:
     $session->pageTextContains('Test page text.');
-  }
-
-  /**
-   * Tests if the image captcha settings page is accessible.
-   */
-  public function testImageCaptchaSettingsPage() {
-    $session = $this->assertSession();
-    $this->drupalGet('admin/config/people/captcha/image_captcha');
-    $session->statusCodeEquals(200);
-    $session->pageTextContains('Example');
-    $session->pageTextContains('Color and image settings');
   }
 
 }
