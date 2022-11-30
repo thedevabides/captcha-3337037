@@ -258,7 +258,7 @@ function _captcha_get_captcha_placement($form_id, $form) {
   }
 
   // Query the placement map.
-  if (array_key_exists($form_id, $placement_map)) {
+  if (array_key_exists($form_id, $placement_map) && $placement_map[$form_id] !== NULL) {
     $placement = $placement_map[$form_id];
   }
   // If no placement info is available in placement map:
