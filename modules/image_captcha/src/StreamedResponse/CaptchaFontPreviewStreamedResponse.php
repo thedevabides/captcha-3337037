@@ -46,13 +46,13 @@ class CaptchaFontPreviewStreamedResponse extends StreamedResponse {
       // Get the mapping of font tokens to font file objects.
       $fonts = $this->config->get('image_captcha_fonts_preview_map_cache');
       if (!isset($fonts[$this->token])) {
-        throw new \LogicException('bad token');
+        throw new \LogicException('Given font token does not exist.');
       }
       // Get the font path.
       $font = $fonts[$this->token]['uri'];
       // Some sanity checks if the given font is valid.
       if (!is_file($font) || !is_readable($font)) {
-        throw new \LogicException('bad font');
+        throw new \LogicException('Font could not be loaded.');
       }
       return $this;
     }
