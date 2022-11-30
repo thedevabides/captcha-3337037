@@ -4,7 +4,7 @@
  */
 
 (function ($) {
-  'use strict';
+  "use strict";
 
   /**
    * Attaches jQuery validate behavoir to forms.
@@ -21,7 +21,7 @@
         var $form = $(this).parents('form');
         // Send post query for getting new captcha data.
         var date = new Date();
-        var url = $(this).attr('href') + '?' + date.getTime();
+        var url = baseUrl.replace(/\/$/g, '') + '/' + $(this).attr('href').replace(/^\//g, '') + '?' + date.getTime();
         // Adding loader.
         $('.captcha').addClass('captcha--loading');
         $.get(
