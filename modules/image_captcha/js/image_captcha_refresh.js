@@ -18,10 +18,11 @@
     attach: function (context) {
       $('.reload-captcha', context).not('.processed').bind('click', function () {
         $(this).addClass('processed');
-        var $form = $(this).parents('form');
+        const $form = $(this).parents('form');
         // Send post query for getting new captcha data.
-        var date = new Date();
-        var url = baseUrl.replace(/\/$/g, '') + '/' + $(this).attr('href').replace(/^\//g, '') + '?' + date.getTime();
+        const date = new Date();
+        const baseUrl = document.location.origin;
+        const url = baseUrl.replace(/\/$/g, '') + '/' + $(this).attr('href').replace(/^\//g, '') + '?' + date.getTime();
         // Adding loader.
         $('.captcha').addClass('captcha--loading');
         $.get(
