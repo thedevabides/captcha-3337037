@@ -389,4 +389,21 @@ class CaptchaAdminTest extends CaptchaWebTestBase {
     $this->assertSession()->responseContains($this->t('Captcha point %label has been deleted.', ['%label' => $label]));
   }
 
+  /**
+   * Tests the admin captcha examples form.
+   */
+  public function testCaptchaAdminExamplesForm() {
+    $this->drupalLogin($this->adminUser);
+    $session = $this->assertSession();
+    $this->drupalGet('/admin/config/people/captcha/examples');
+    $session->statusCodeEquals(200);
+    $session->pageTextContains('CAPTCHA examples');
+    // Check if math challenge details exists:
+    $session->elementExists('css', '#edit-captcha-captcha-0');
+    $session->elementTextEquals('css', 'details#edit-captcha-captcha-0 > summary', 'Challenge Math by module captcha');
+    // Check if math captcha exists:
+    $session->elementExists('css', 'fieldset.captcha.captcha.captcha-type-challenge--math');
+    $session->elementExists('css', 'fieldset.captcha.captcha.captcha-type-challenge--math > div.captcha__element');
+  }
+
 }

@@ -91,6 +91,12 @@ class Captcha extends FormElement implements ContainerFactoryPluginInterface {
     // Add JavaScript for general CAPTCHA functionality.
     $element['#attached']['library'][] = 'captcha/base';
 
+    // Skip the captcha, if the user has "skip CAPTCHA" permission and the
+    // element is NOT in admin mode:
+    if (\Drupal::currentUser()->hasPermission('skip CAPTCHA') && empty($element['#captcha_admin_mode'])) {
+      $element['#access'] = FALSE;
+    }
+
     if ($form_state->getTriggeringElement() && isset($form_state->getTriggeringElement()['#limit_validation_errors']) && is_array($form_state->getTriggeringElement()['#limit_validation_errors'])) {
       // This is a partial (ajax) submission with limited validation. Do not
       // change anything about the captcha element, assume that it will not
