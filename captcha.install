@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the CAPTCHA module.
  */
 
+use Drupal\captcha\Constants\CaptchaConstants;
+
 /**
  * Implements hook_schema().
  */
@@ -125,7 +127,7 @@ function captcha_install() {
       $values = [
         'label' => $label[$index],
         'formId' => $form_id,
-        'captchaType' => 'default',
+        'captchaType' => CaptchaConstants::CAPTCHA_TYPE_DEFAULT,
         'status' => FALSE,
       ];
       $captcha_storage->create($values)->save();

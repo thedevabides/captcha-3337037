@@ -18,4 +18,11 @@ class ImageCaptchaConstants {
   const IMAGE_CAPTCHA_FILE_FORMAT_PNG = 2;
   const IMAGE_CAPTCHA_FILE_FORMAT_TRANSPARENT_PNG = 3;
 
+  /**
+   * The image captcha captcha type.
+   *
+   * @var string
+   */
+  const IMAGE_CAPTCHA_CAPTCHA_TYPE = 'image_captcha/Image';
+
 }

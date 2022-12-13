@@ -19,7 +19,7 @@ use Drupal\captcha\Constants\CaptchaConstants;
  *   The setting for the given form_id, can be:
  *   - 'default' to use the default challenge type
  *   - NULL to remove the entry for the CAPTCHA type
- *   - something of the form 'image_captcha/Image'
+ *   - something of the form "image_captcha/Image"
  *   - an object with attributes $captcha_type->module
  *   and $captcha_type->captcha_type.
  */
@@ -221,9 +221,9 @@ function _captcha_get_error_message() {
  *   list($captcha_module, $captcha_type).
  */
 function _captcha_parse_captcha_type($captcha_type) {
-  if ($captcha_type == 'default') {
+  if ($captcha_type == CaptchaConstants::CAPTCHA_TYPE_DEFAULT) {
     $captcha_type = \Drupal::config('captcha.settings')
-      ->get('default_challenge', 'captcha/Math');
+      ->get('default_challenge', CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE);
   }
   return explode('/', $captcha_type);
 }

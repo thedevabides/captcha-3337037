@@ -101,7 +101,7 @@ class ImageCaptchaSettingsForm extends ConfigFormBase {
 
     $form['image_captcha_example']['image'] = [
       '#type' => 'captcha',
-      '#captcha_type' => 'image_captcha/Image',
+      '#captcha_type' => ImageCaptchaConstants::IMAGE_CAPTCHA_CAPTCHA_TYPE,
       '#captcha_admin_mode' => TRUE,
     ];
 

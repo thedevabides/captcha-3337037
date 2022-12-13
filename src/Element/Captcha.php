@@ -61,7 +61,7 @@ class Captcha extends FormElement implements ContainerFactoryPluginInterface {
       '#input' => TRUE,
       '#process' => [[static::class, 'processCaptchaElement']],
       // The type of challenge: e.g. 'default', 'captcha/Math', etc.
-      '#captcha_type' => 'default',
+      '#captcha_type' => CaptchaConstants::CAPTCHA_TYPE_DEFAULT,
       '#default_value' => '',
       // CAPTCHA in admin mode: presolve the CAPTCHA and always show
       // it (despite previous successful responses).

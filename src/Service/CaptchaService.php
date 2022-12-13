@@ -2,6 +2,7 @@
 
 namespace Drupal\captcha\Service;
 
+use Drupal\captcha\Constants\CaptchaConstants;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -46,7 +47,7 @@ class CaptchaService {
     $challenges = [];
 
     if ($add_special_options) {
-      $challenges['default'] = $this->t('Default challenge type');
+      $challenges[CaptchaConstants::CAPTCHA_TYPE_DEFAULT] = $this->t('Default challenge type');
     }
 
     // We do our own version of Drupal's module_invoke_all() here because

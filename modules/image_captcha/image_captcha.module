@@ -5,12 +5,12 @@
  * Implements image CAPTCHA for use with the CAPTCHA module.
  */
 
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\Core\Link;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\captcha\Constants\CaptchaConstants;
 use Drupal\image_captcha\Constants\ImageCaptchaConstants;
+use Drupal\image_captcha\Service\ImageCaptchaRenderService;
 
 /**
  * Implements hook_help().
@@ -353,53 +353,14 @@ function image_captcha_theme() {
 /**
  * Implements hook_element_info_alter().
  */
-function image_captcha_element_info_alter(array &$element) {
-  if (isset($element['captcha'])) {
-    $element['captcha']['#process'][] = 'image_captcha_after_build_process';
+function image_captcha_element_info_alter(array &$info) {
+  if (!empty($info['captcha'])) {
+    // Register the process callback. Sadly we can't determine here safely yet,
+    // if the processed captcha type is an image_captcha. That has to be done
+    // inside the #process callback.
+    $info['captcha']['#process'][] = [
+      ImageCaptchaRenderService::class,
+      'imageCaptchaAfterBuildProcess',
+    ];
   }
-}
-
-/**
- * Add image refresh button to captcha form element.
- *
- * @return array
- *   The processed element.
- *
- * @see captcha_element_info()
- * @see image_captcha_element_info_alter()
- */
-function image_captcha_after_build_process($element) {
-  // Only proceed, if we can determine the form_id:
-  if (!empty($element['#captcha_info']['form_id'])) {
-    $form_id = $element['#captcha_info']['form_id'];
-    $captcha_point = captcha_get_form_id_setting($form_id);
-
-    $is_image_captcha = FALSE;
-    if (isset($captcha_point->captchaType) && $captcha_point->captchaType == 'image_captcha/Image') {
-      $is_image_captcha = TRUE;
-    }
-    elseif (isset($captcha_point->captchaType) && $captcha_point->captchaType == 'default') {
-      $default_challenge = \Drupal::service('config.manager')
-        ->getConfigFactory()
-        ->get('captcha.settings')
-        ->get('default_challenge');
-      if ($default_challenge == 'image_captcha/Image') {
-        $is_image_captcha = TRUE;
-      }
-    }
-    if ($is_image_captcha && isset($element['captcha_widgets']['captcha_image_wrapper']['captcha_image'])) {
-      $uri = Link::fromTextAndUrl(t('Get new captcha!'),
-        new Url('image_captcha.refresh',
-          ['form_id' => $form_id],
-          ['attributes' => ['class' => ['reload-captcha']]]
-        )
-      );
-      $element['captcha_widgets']['captcha_image_wrapper']['captcha_refresh'] = [
-        '#theme' => 'image_captcha_refresh',
-        '#captcha_refresh_link' => $uri,
-      ];
-    }
-
-  }
-  return $element;
 }

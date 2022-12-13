@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\captcha\Functional;
 
+use Drupal\captcha\Constants\CaptchaConstants;
 use Drupal\Core\Database\Database;
+use Drupal\image_captcha\Constants\ImageCaptchaConstants;
 
 /**
  * Tests CAPTCHA caching on various pages.
@@ -42,7 +44,7 @@ class CaptchaCacheTest extends CaptchaWebTestBase {
     $this->assertEquals($this->getSession()->getResponseHeader('x-drupal-cache'), 'HIT');
 
     // Enable captcha on login block and test caching.
-    captcha_set_form_id_setting('user_login_form', 'captcha/Math');
+    captcha_set_form_id_setting('user_login_form', CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE);
     $this->drupalGet('');
     $sid = $this->getCaptchaSidFromForm();
     $this->assertNull($this->getSession()->getResponseHeader('x-drupal-cache'), 'Cache is disabled');
@@ -58,7 +60,7 @@ class CaptchaCacheTest extends CaptchaWebTestBase {
     $this->assertNotEquals($sid, $this->getCaptchaSidFromForm());
 
     // Switch challenge to image_captcha/Image, check the captcha isn't cached.
-    captcha_set_form_id_setting('user_login_form', 'image_captcha/Image');
+    captcha_set_form_id_setting('user_login_form', ImageCaptchaConstants::IMAGE_CAPTCHA_CAPTCHA_TYPE);
     $this->drupalGet('');
     $image_path = $this->getSession()->getPage()->find('css', '.captcha img')->getAttribute('src');
     $this->assertNull($this->getSession()->getResponseHeader('x-drupal-cache'), 'Cache disabled');

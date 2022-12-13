@@ -28,7 +28,19 @@ class CaptchaConstants {
   const CAPTCHA_WHITELIST_IP_ADDRESS = 'addresses';
   const CAPTCHA_WHITELIST_IP_RANGE = 'ranges';
 
-  // Default captcha field access.
+  /**
+   * Default captcha field access.
+   */
   const CAPTCHA_FIELD_DEFAULT_ACCESS = 1;
+
+  /**
+   * The math captcha type.
+   */
+  const CAPTCHA_MATH_CAPTCHA_TYPE = 'captcha/Math';
+
+  /**
+   * The default captcha type.
+   */
+  const CAPTCHA_TYPE_DEFAULT = 'default';
 
 }

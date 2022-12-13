@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\captcha\Kernel\Migrate\d7;
 
+use Drupal\captcha\Constants\CaptchaConstants;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 
 /**
@@ -24,7 +25,7 @@ class MigrateCaptchaSimpleConfigurationTest extends MigrateDrupal7TestBase {
   protected $expectedConfig = [
     'captcha.settings' => [
       'enabled_default' => 1,
-      'default_challenge' => 'captcha/Math',
+      'default_challenge' => CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE,
       'description' => 'This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.',
       'administration_mode' => TRUE,
       'allow_on_admin_pages' => FALSE,

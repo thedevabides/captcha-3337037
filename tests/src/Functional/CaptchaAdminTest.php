@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\captcha\Functional;
 
+use Drupal\captcha\Constants\CaptchaConstants;
 use Drupal\captcha\Entity\CaptchaPoint;
 use Drupal\Core\Url;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -43,7 +44,7 @@ class CaptchaAdminTest extends CaptchaWebTestBase {
     $this->assertEquals($result, 'test', 'Setting and symbolic getting CAPTCHA point: "test"');
 
     // Set to 'default'.
-    captcha_set_form_id_setting($comment_form_id, 'default');
+    captcha_set_form_id_setting($comment_form_id, CaptchaConstants::CAPTCHA_TYPE_DEFAULT);
     $this->config('captcha.settings')
       ->set('default_challenge', 'foo/bar')
       ->save();
@@ -134,7 +135,7 @@ class CaptchaAdminTest extends CaptchaWebTestBase {
     $this->clickLink($this->t('Place a CAPTCHA here for untrusted users.'));
 
     // Enable Math CAPTCHA.
-    $edit = ['captchaType' => 'captcha/Math'];
+    $edit = ['captchaType' => CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE];
     $this->drupalGet($this->getUrl());
     $this->submitForm($edit, $this->t('Save'));
 
@@ -146,13 +147,13 @@ class CaptchaAdminTest extends CaptchaWebTestBase {
     $this->assertSession()->pageTextContains($this->t('CAPTCHA: challenge "@type" enabled', ['@type' => $edit['captchaType']]));
 
     // Check if CAPTCHA was successfully enabled (through API).
-    $this->assertCaptchaSetting(self::COMMENT_FORM_ID, 'captcha/Math');
+    $this->assertCaptchaSetting(self::COMMENT_FORM_ID, CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE);
 
     // Edit challenge type through CAPTCHA admin links.
     $this->clickLink($this->t('change'));
 
     // Enable Math CAPTCHA.
-    $edit = ['captchaType' => 'default'];
+    $edit = ['captchaType' => CaptchaConstants::CAPTCHA_TYPE_DEFAULT];
     $this->drupalGet($this->getUrl());
     $this->submitForm($edit, 'Save');
 
@@ -167,7 +168,7 @@ class CaptchaAdminTest extends CaptchaWebTestBase {
     // @todo Make sure the edit is a real change.
     $this->assertSession()->pageTextContains($this->t('CAPTCHA: challenge "@type" enabled', ['@type' => $edit['captchaType']]));
     // Check if CAPTCHA was successfully edited (through API).
-    $this->assertCaptchaSetting(self::COMMENT_FORM_ID, 'default');
+    $this->assertCaptchaSetting(self::COMMENT_FORM_ID, CaptchaConstants::CAPTCHA_TYPE_DEFAULT);
 
     // Disable challenge through CAPTCHA admin links.
     $this->drupalGet(Url::fromRoute('entity.captcha_point.disable', ['captcha_point' => self::COMMENT_FORM_ID]));
@@ -188,7 +189,7 @@ class CaptchaAdminTest extends CaptchaWebTestBase {
    */
   public function testUntrustedUserPosting() {
     // Set CAPTCHA on comment form.
-    captcha_set_form_id_setting(self::COMMENT_FORM_ID, 'captcha/Math');
+    captcha_set_form_id_setting(self::COMMENT_FORM_ID, CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE);
 
     // Create a node with comments enabled.
     $node = $this->drupalCreateNode();
@@ -216,7 +217,7 @@ class CaptchaAdminTest extends CaptchaWebTestBase {
    */
   public function testXssOnCaptchaDescription() {
     // Set CAPTCHA on user register form.
-    captcha_set_form_id_setting('user_register', 'captcha/Math');
+    captcha_set_form_id_setting('user_register', CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE);
 
     // Put JavaScript snippet in CAPTCHA description.
     $this->drupalLogin($this->adminUser);
@@ -236,7 +237,7 @@ class CaptchaAdminTest extends CaptchaWebTestBase {
    */
   public function testCaptchaPlacementCacheClearing() {
     // Set CAPTCHA on user register form.
-    captcha_set_form_id_setting('user_register_form', 'captcha/Math');
+    captcha_set_form_id_setting('user_register_form', CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE);
     // Visit user register form to fill the CAPTCHA placement cache.
     $this->drupalGet('user/register');
     // Check if there is CAPTCHA placement cache.
