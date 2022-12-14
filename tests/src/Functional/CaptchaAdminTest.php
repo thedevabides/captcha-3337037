@@ -17,6 +17,40 @@ class CaptchaAdminTest extends CaptchaWebTestBase {
   use StringTranslationTrait;
 
   /**
+   * A user without the "skip CAPTCHA" permission.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $userWithoutSkipCaptcha;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp(): void {
+    parent::setUp();
+
+    $this->userWithoutSkipCaptcha = $this->drupalCreateUser([
+      'access content',
+      'administer site configuration',
+      'administer CAPTCHA settings',
+    ]);
+  }
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  protected static $modules = [
+    'test_page_test',
+  ];
+
+  /**
    * Test access to the admin pages.
    */
   public function testAdminAccess() {
@@ -405,6 +439,250 @@ class CaptchaAdminTest extends CaptchaWebTestBase {
     // Check if math captcha exists:
     $session->elementExists('css', 'fieldset.captcha.captcha.captcha-type-challenge--math');
     $session->elementExists('css', 'fieldset.captcha.captcha.captcha-type-challenge--math > div.captcha__element');
+  }
+
+  /**
+   * Tests the captcha administration mode (admin informations).
+   */
+  public function testCaptchaAdministrationMode() {
+    $this->drupalLogin($this->adminUser);
+    $session = $this->assertSession();
+    // Enable administration mode:
+    $this->config('captcha.settings')->set('administration_mode', TRUE)->save();
+    // Create Captcha point on a non admin test page:
+    CaptchaPoint::create([
+      'formId' => 'test_page_form',
+      'label' => 'CaptchaPointOnNonAdminPage',
+      'captchaType' => CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE,
+    ])->save();
+    // Create Captcha point on a admin test page:
+    CaptchaPoint::create([
+      'formId' => 'system_performance_settings',
+      'label' => 'CaptchaPointOnAdminPage',
+      'captchaType' => CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE,
+    ])->save();
+    // Go to the test page and check if the admin information get displayed:
+    $this->drupalGet('/test-field-xpath');
+    $session->pageTextContains('Users without the "skip CAPTCHA" permission will see a CAPTCHA here');
+    $session->elementExists('css', 'details.captcha-admin-links.form-wrapper');
+    // Check summary text:
+    $session->elementExists('css', 'details.captcha-admin-links.form-wrapper > summary');
+    $session->elementTextContains('css', 'details.captcha-admin-links.form-wrapper > summary', 'CAPTCHA: challenge "captcha/Math" enabled');
+    // Check if link to settings page exists:
+    $session->elementExists('css', 'details.captcha-admin-links.form-wrapper > a[href*="captcha"]');
+    // Check if link to assoicated captcha point exists:
+    $session->elementExists('css', 'details.captcha-admin-links.form-wrapper > div#edit-challenge');
+    $session->elementExists('css', 'details.captcha-admin-links.form-wrapper > div#edit-challenge > a[href*="/admin/config/people/captcha/captcha-points/test_page_form"]');
+
+    // Go to the admin form and see if there is no captcha at all, as it should
+    // be simply skipped:
+    $this->drupalGet('/admin/config/development/performance');
+    $session->elementNotExists('css', 'fieldset.captcha');
+    $session->elementNotExists('css', 'fieldset.captcha > div.captcha__element');
+    $session->pageTextNotContains('This question is for testing whether or not you are a human visitor and to prevent automated spam submissions');
+
+    // Login as a user without the "skip CAPTCHA" permission and check
+    // everything once again:
+    $this->drupalLogout();
+    $this->drupalLogin($this->userWithoutSkipCaptcha);
+    $this->drupalGet('/test-field-xpath');
+
+    // Go to the test page and check if the admin information won't get
+    // displayed:
+    $session->pageTextNotContains('Users without the "skip CAPTCHA" permission will see a CAPTCHA here');
+    $session->elementNotExists('css', 'details.captcha-admin-links.form-wrapper');
+    // See if instead the captcha appears:
+    $session->elementExists('css', 'fieldset.captcha.captcha-type-challenge--math');
+
+    // The same behaviour should happen on the admin page:
+    $session->pageTextNotContains('Users without the "skip CAPTCHA" permission will see a CAPTCHA here');
+    $session->elementNotExists('css', 'details.captcha-admin-links.form-wrapper');
+    // See if instead the captcha appears:
+    $session->elementExists('css', 'fieldset.captcha.captcha-type-challenge--math');
+
+    // Logout and check the behaviour on the non admin page:
+    $this->drupalLogout();
+    $this->drupalGet('/test-field-xpath');
+
+    // Go to the test page and check if the admin information won't get
+    // displayed:
+    $session->pageTextNotContains('Users without the "skip CAPTCHA" permission will see a CAPTCHA here');
+    $session->elementNotExists('css', 'details.captcha-admin-links.form-wrapper');
+    // See if instead the captcha appears:
+    $session->elementExists('css', 'fieldset.captcha.captcha-type-challenge--math');
+  }
+
+  /**
+   * Tests the captcha administration mode (admin informations).
+   */
+  public function testCaptchaAdministrationModeOnAdminRoutes() {
+    $this->drupalLogin($this->adminUser);
+    $session = $this->assertSession();
+    // Enable administration mode:
+    $this->config('captcha.settings')->set('administration_mode', TRUE)->save();
+    $this->config('captcha.settings')->set('administration_mode_on_admin_routes', TRUE)->save();
+    // Create Captcha point on a non admin test page:
+    CaptchaPoint::create([
+      'formId' => 'test_page_form',
+      'label' => 'CaptchaPointOnNonAdminPage',
+      'captchaType' => CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE,
+    ])->save();
+    // Create Captcha point on a admin test page:
+    CaptchaPoint::create([
+      'formId' => 'system_performance_settings',
+      'label' => 'CaptchaPointOnAdminPage',
+      'captchaType' => CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE,
+    ])->save();
+    // Go to the test page and check if the admin information get displayed:
+    $this->drupalGet('/test-field-xpath');
+    $session->pageTextContains('Users without the "skip CAPTCHA" permission will see a CAPTCHA here');
+    $session->elementExists('css', 'details.captcha-admin-links.form-wrapper');
+    // Check summary text:
+    $session->elementExists('css', 'details.captcha-admin-links.form-wrapper > summary');
+    $session->elementTextContains('css', 'details.captcha-admin-links.form-wrapper > summary', 'CAPTCHA: challenge "captcha/Math" enabled');
+    // Check if link to settings page exists:
+    $session->elementExists('css', 'details.captcha-admin-links.form-wrapper > a[href*="/admin/config/people/captcha"]');
+    // Check if link to assoicated captcha point exists:
+    $session->elementExists('css', 'details.captcha-admin-links.form-wrapper > div#edit-challenge');
+    $session->elementExists('css', 'details.captcha-admin-links.form-wrapper > div#edit-challenge > a[href*="/admin/config/people/captcha/captcha-points/test_page_form"]');
+
+    // Go to the admin form and see if also there the admin information get
+    // displayed:
+    $this->drupalGet('/admin/config/development/performance');
+    $session->pageTextContains('Users without the "skip CAPTCHA" permission will see a CAPTCHA here');
+    $session->elementExists('css', 'details.captcha-admin-links.form-wrapper');
+    // Check summary text:
+    $session->elementExists('css', 'details.captcha-admin-links.form-wrapper > summary');
+    $session->elementTextContains('css', 'details.captcha-admin-links.form-wrapper > summary', 'CAPTCHA: challenge "captcha/Math" enabled');
+    // Check if link to settings page exists:
+    $session->elementExists('css', 'details.captcha-admin-links.form-wrapper > a[href*="/admin/config/people/captcha"]');
+    // Check if link to assoicated captcha point exists:
+    $session->elementExists('css', 'details.captcha-admin-links.form-wrapper > div#edit-challenge');
+    $session->elementExists('css', 'details.captcha-admin-links.form-wrapper > div#edit-challenge > a[href*="/admin/config/people/captcha/captcha-points/system_performance_settings"]');
+
+    // Login as a user without the "skip CAPTCHA" permission and check
+    // everything once again:
+    $this->drupalLogout();
+    $this->drupalLogin($this->userWithoutSkipCaptcha);
+    $this->drupalGet('/test-field-xpath');
+
+    // Go to the test page and check if the admin information won't get
+    // displayed:
+    $session->pageTextNotContains('Users without the "skip CAPTCHA" permission will see a CAPTCHA here');
+    $session->elementNotExists('css', 'details.captcha-admin-links.form-wrapper');
+    // See if instead the captcha appears:
+    $session->elementExists('css', 'fieldset.captcha.captcha-type-challenge--math');
+
+    // The same behaviour should happen on the admin page:
+    $session->pageTextNotContains('Users without the "skip CAPTCHA" permission will see a CAPTCHA here');
+    $session->elementNotExists('css', 'details.captcha-admin-links.form-wrapper');
+    // See if instead the captcha appears:
+    $session->elementExists('css', 'fieldset.captcha.captcha-type-challenge--math');
+
+    // Logout and check the behaviour on the non admin page:
+    $this->drupalLogout();
+    $this->drupalGet('/test-field-xpath');
+
+    // Go to the test page and check if the admin information won't get
+    // displayed:
+    $session->pageTextNotContains('Users without the "skip CAPTCHA" permission will see a CAPTCHA here');
+    $session->elementNotExists('css', 'details.captcha-admin-links.form-wrapper');
+    // See if instead the captcha appears:
+    $session->elementExists('css', 'fieldset.captcha.captcha-type-challenge--math');
+  }
+
+  /**
+   * Tests the captcha enable globally setting.
+   */
+  public function testCaptchaEnableGlobally() {
+    // Disable login captcha to be able to log in:
+    $this->disableLoginCaptchaPoint();
+    $this->drupalLogin($this->adminUser);
+    $session = $this->assertSession();
+    // Set math challenge as default:
+    $this->setDefaultChallenge('captcha/Math');
+
+    // Enable globally:
+    $this->config('captcha.settings')->set('enable_globally', TRUE)->save();
+
+    // Go to the test page and check if there is no captcha displayed, as the
+    // admin has the "skip CAPTCHA" permission:
+    $this->drupalGet('/test-field-xpath');
+    $session->elementNotExists('css', 'fieldset.captcha.captcha-type-challenge--math');
+    $session->pageTextNotContains('This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.');
+
+    // Go to the admin form and see if there no captcha displayed:
+    $this->drupalGet('/admin/config/development/performance');
+    $session->elementNotExists('css', 'fieldset.captcha.captcha-type-challenge--math');
+    $session->pageTextNotContains('This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.');
+
+    // Login as a user without the "skip CAPTCHA" permission and check
+    // everything once again:
+    $this->drupalLogout();
+    $this->drupalLogin($this->userWithoutSkipCaptcha);
+    $this->drupalGet('/test-field-xpath');
+
+    // Go to the test page and check if the captcha gets displayed:
+    $this->drupalGet('/test-field-xpath');
+    $session->elementExists('css', 'fieldset.captcha.captcha-type-challenge--math');
+    $session->pageTextContains('This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.');
+
+    // Go to the admin form and see if there no captcha is displayed:
+    $this->drupalGet('/admin/config/development/performance');
+    $session->elementNotExists('css', 'fieldset.captcha.captcha-type-challenge--math');
+    $session->pageTextNotContains('This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.');
+
+    // Logout and check the behaviour on the non admin page:
+    $this->drupalLogout();
+    $this->drupalGet('/test-field-xpath');
+
+    // Go to the test page and check if the captcha gets displayed:
+    $this->drupalGet('/test-field-xpath');
+    $session->elementExists('css', 'fieldset.captcha.captcha-type-challenge--math');
+    $session->pageTextContains('This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.');
+  }
+
+  /**
+   * Tests the captcha enable globally setting.
+   */
+  public function testCaptchaEnableGloballyOnAdminRoutes() {
+    // Disable login captcha to be able to log in:
+    $this->disableLoginCaptchaPoint();
+    $this->drupalLogin($this->adminUser);
+    $session = $this->assertSession();
+    // Set math challenge as default:
+    $this->setDefaultChallenge('captcha/Math');
+
+    // Enable globally:
+    $this->config('captcha.settings')->set('enable_globally', TRUE)->save();
+    $this->config('captcha.settings')->set('enable_globally_on_admin_routes', TRUE)->save();
+
+    // Go to the test page and check if there is no captcha displayed, as the
+    // admin has the "skip CAPTCHA" permission:
+    $this->drupalGet('/test-field-xpath');
+    $session->elementNotExists('css', 'fieldset.captcha.captcha-type-challenge--math');
+    $session->pageTextNotContains('This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.');
+
+    // Go to the admin form and see if there no captcha displayed:
+    $this->drupalGet('/admin/config/development/performance');
+    $session->elementNotExists('css', 'fieldset.captcha.captcha-type-challenge--math');
+    $session->pageTextNotContains('This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.');
+
+    // Login as a user without the "skip CAPTCHA" permission and check
+    // everything once again:
+    $this->drupalLogout();
+    $this->drupalLogin($this->userWithoutSkipCaptcha);
+    $this->drupalGet('/test-field-xpath');
+
+    // Go to the test page and check if the captcha gets displayed:
+    $this->drupalGet('/test-field-xpath');
+    $session->elementExists('css', 'fieldset.captcha.captcha-type-challenge--math');
+    $session->pageTextContains('This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.');
+
+    // Go to the admin form and see if there is also a captcha displayed:
+    $this->drupalGet('/admin/config/development/performance');
+    $session->elementExists('css', 'fieldset.captcha.captcha-type-challenge--math');
+    $session->pageTextContains('This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.');
   }
 
 }

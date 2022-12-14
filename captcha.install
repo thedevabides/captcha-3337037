@@ -186,3 +186,30 @@ function captcha_update_8903(&$sandbox) {
   // Delete old config:
   $config->clear('add_captcha_description')->save();
 }
+
+/**
+ * Several changes.
+ *
+ * Remove old configuration keys and map to new ones.
+ */
+function captcha_update_8904(&$sandbox) {
+  // Update config:
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('captcha.settings');
+
+  $config->set('administration_mode_on_admin_routes', FALSE);
+  $config->set('enable_globally_on_admin_routes', FALSE);
+  $config->set('enable_globally', $config->get('enabled_default'));
+
+  if (!empty($config->get('allow_on_admin_pages')) && !empty($config->get('administration_mode'))) {
+    $config->set('administration_mode_on_admin_routes', TRUE);
+  }
+  if (!empty($config->get('allow_on_admin_pages')) && !empty($config->get('enabled_default'))) {
+    $config->set('enable_globally_on_admin_routes', TRUE);
+  }
+  $config
+    ->clear('allow_on_admin_pages')
+    ->clear('enabled_default')
+    ->save();
+
+}

@@ -111,25 +111,40 @@ class CaptchaSettingsForm extends ConfigFormBase {
     ];
 
     // Option for enabling CAPTCHA for all forms.
-    $form['enabled_default'] = [
+    $form['enable_globally'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Enable CAPTCHA challenges on all forms'),
-      '#description' => $this->t('Note, that the captcha point <em>default challenge</em> will be used as the challenge type for the created CAPTCHA challenges.'),
-      '#default_value' => $config->get('enabled_default'),
+      '#title' => $this->t('Add CAPTCHA challenges on all forms'),
+      '#description' => $this->t('Adds CAPTCHA to all Drupal forms, regardless of the Captcha Points list. Note, that the captcha point <em>default challenge</em> will be used as the challenge type for the created CAPTCHA challenges.'),
+      '#default_value' => $config->get('enable_globally'),
+    ];
+    $form['enable_globally_on_admin_routes'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Additionally add CAPTCHA challenges on admin forms'),
+      '#default_value' => $config->get('enable_globally_on_admin_routes'),
+      '#states' => [
+        'invisible' => [
+          ':input[name="enable_globally"]' => ['checked' => FALSE],
+        ],
+      ],
     ];
     // Field for the CAPTCHA administration mode.
     $form['administration_mode'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Add CAPTCHA administration links to forms'),
+      '#title' => $this->t('Add CAPTCHA administration information to forms'),
       '#default_value' => $config->get('administration_mode'),
-      '#description' => $this->t('This option makes it easy to manage CAPTCHA settings on forms. When enabled, users with the <em>administer CAPTCHA settings</em> permission will see a fieldset with CAPTCHA administration links on all forms, except on administrative pages.'),
+      '#description' => $this->t('This option makes it easy to manage CAPTCHA settings on forms. When enabled, users with the <em>administer CAPTCHA settings</em> permission will see a fieldset with CAPTCHA administration links and informations on all forms, except on administrative pages.'),
     ];
     // Field for the CAPTCHAs on admin pages.
-    $form['allow_on_admin_pages'] = [
+    $form['administration_mode_on_admin_routes'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Allow CAPTCHAs and CAPTCHA administration links on administrative pages'),
-      '#default_value' => $config->get('allow_on_admin_pages'),
-      '#description' => $this->t("This option makes it possible to add CAPTCHAs to forms on administrative pages. CAPTCHAs are disabled by default on administrative pages (which shouldn't be accessible to untrusted users normally) to avoid the related overhead. In some situations, e.g. in the case of demo sites, it can be useful to allow CAPTCHAs on administrative pages."),
+      '#title' => $this->t('Additionally add administration informations on admin pages'),
+      '#description' => $this->t("Typically this isn't needed. In some situations, e.g. in the case of demo sites, it can be useful to allow CAPTCHAs on administrative pages."),
+      '#default_value' => $config->get('administration_mode_on_admin_routes'),
+      '#states' => [
+        'invisible' => [
+          ':input[name="administration_mode"]' => ['checked' => FALSE],
+        ],
+      ],
     ];
 
     // Adding configuration for ip protection.
@@ -305,9 +320,10 @@ class CaptchaSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('captcha.settings');
     $config->set('administration_mode', $form_state->getValue('administration_mode'));
-    $config->set('allow_on_admin_pages', $form_state->getValue('allow_on_admin_pages'));
+    $config->set('administration_mode_on_admin_routes', ($form_state->getValue('administration_mode') && $form_state->getValue('administration_mode_on_admin_routes')));
+    $config->set('enable_globally', $form_state->getValue('enable_globally'));
+    $config->set('enable_globally_on_admin_routes', ($form_state->getValue('enable_globally') && $form_state->getValue('enable_globally_on_admin_routes')));
     $config->set('default_challenge', $form_state->getValue('default_challenge'));
-    $config->set('enabled_default', $form_state->getValue('enabled_default'));
 
     // Whitelisted ip addresses and ranges.
     $config->set('whitelist_ips', $form_state->getValue('whitelist_ips'));

@@ -131,9 +131,13 @@ function captcha_form_alter(array &$form, FormStateInterface $form_state, $form_
   $account = \Drupal::currentUser();
   $config = \Drupal::config('captcha.settings');
   $captchaService = \Drupal::service('captcha.helper');
+  $adminContext = \Drupal::service('router.admin_context');
+  $captcha_point = NULL;
 
-  // Visitor does not have permission to skip CAPTCHAs.
   \Drupal::moduleHandler()->loadInclude('captcha', 'inc');
+
+  // If the user does not have the "skip CAPTCHA" permission render
+  // it "normally":
   if (!$account->hasPermission('skip CAPTCHA')) {
     $query = \Drupal::entityQuery('captcha_point');
     $query->condition('label', $form_id);
@@ -168,16 +172,25 @@ function captcha_form_alter(array &$form, FormStateInterface $form_state, $form_
       }
     }
 
-    if (empty($captcha_point) && $config->get('enabled_default')) {
-      // Create fake captcha point without saving.
-      /** @var \Drupal\captcha\CaptchaPointInterface $captcha_point */
-      $captcha_point = new CaptchaPoint([
-        'formId' => $form_id,
-        'captchaType' => $config->get('default_challenge'),
-      ], 'captcha_point');
-      $captcha_point->enable();
+    // If there is no CaptchaPoint at all, but we want to add a captcha globally
+    // for every form do that here:
+    if (empty($captcha_point) && !empty($config->get('enable_globally'))) {
+      // Only add this captcha on non admin routes or if
+      // "enable_globally_on_admin_routes" is enabled, also on admin routes:
+      if (
+      !$adminContext->isAdminRoute()
+      ||
+      ($adminContext->isAdminRoute() && !empty($config->get('enable_globally_on_admin_routes')))
+      ) {
+        // Create captcha point without saving.
+        /** @var \Drupal\captcha\CaptchaPointInterface $captcha_point */
+        $captcha_point = new CaptchaPoint([
+          'formId' => $form_id,
+          'captchaType' => $config->get('default_challenge'),
+        ], 'captcha_point');
+        $captcha_point->enable();
+      }
     }
-
     if (!empty($captcha_point) && $captcha_point->status()) {
       // Checking if user's ip is whitelisted.
       if (captcha_whitelist_ip_whitelisted()) {
@@ -201,59 +214,72 @@ function captcha_form_alter(array &$form, FormStateInterface $form_state, $form_
       }
     }
   }
-  elseif ($config->get('administration_mode') && $account->hasPermission('administer CAPTCHA settings')
-    && (!\Drupal::service('router.admin_context')
-      ->isAdminRoute() || $config->get('allow_on_admin_pages'))
-  ) {
-    // Add CAPTCHA administration tools.
-    /** @var \Drupal\captcha\CaptchaPointInterface $captcha_point */
-    $captcha_point = CaptchaPoint::load($form_id);
+  // If the user has the "skip CAPTCHA" permission, check, if it should be
+  // rendered in "administration_mode", which adds administrative informations
+  // to the captcha:
+  elseif (!empty($config->get('administration_mode')) && $account->hasPermission('administer CAPTCHA settings')) {
+    // Add informations if it isn't an admin route OR if
+    // "administration_mode_on_admin_routes" is set and the current route is
+    // and admin route:
+    if (
+      !$adminContext->isAdminRoute()
+      ||
+      ($config->get('administration_mode_on_admin_routes') && $adminContext->isAdminRoute())
+      ) {
+      // Add CAPTCHA administration tools.
+      /** @var \Drupal\captcha\CaptchaPointInterface $captcha_point */
+      $captcha_point = CaptchaPoint::load($form_id);
 
-    // For administrators: show CAPTCHA info and offer link to configure it.
-    $captcha_element = [
-      '#type' => 'details',
-      '#title' => t('CAPTCHA'),
-      '#attributes' => [
-        'class' => ['captcha-admin-links'],
-      ],
-      '#open' => TRUE,
-    ];
+      // Add admin information to the captcha:
+      $captcha_element = [
+        '#type' => 'details',
+        '#title' => t('CAPTCHA'),
+        '#attributes' => [
+          'class' => ['captcha-admin-links'],
+        ],
+        '#open' => TRUE,
+      ];
 
-    if ($captcha_point !== NULL && $captcha_point->getCaptchaType()) {
-      $captcha_element['#title'] = $captcha_point->status() ? t('CAPTCHA: challenge "@type" enabled', ['@type' => $captcha_point->getCaptchaType()]) : t('CAPTCHA: challenge "@type" disabled', ['@type' => $captcha_point->getCaptchaType()]);
-      $captcha_point->status() ? $captcha_element['#description'] = t('Untrusted users will see a CAPTCHA here (<a href="@settings">general CAPTCHA settings</a>).',
+      if ($captcha_point !== NULL && $captcha_point->getCaptchaType()) {
+        $captcha_element['#title'] = $captcha_point->status() ? t('CAPTCHA: challenge "@type" enabled', ['@type' => $captcha_point->getCaptchaType()]) : t('CAPTCHA: challenge "@type" disabled', ['@type' => $captcha_point->getCaptchaType()]);
+        $captcha_point->status() ? $captchaElementDescription = t('Users without the "skip CAPTCHA" permission will see a CAPTCHA here (<a href="@settings">general CAPTCHA settings</a>).',
         [
           '@settings' => Url::fromRoute('captcha_settings')
             ->toString(),
-        ]) : $captcha_element['#description'] = t('CAPTCHA disabled, Untrusted users won\'t see the captcha (<a href="@settings">general CAPTCHA settings</a>).',
-        ['@settings' => Url::fromRoute('captcha_settings')->toString()]
-      );
-      $captcha_element['challenge'] = [
-        '#type' => 'item',
-        '#title' => t('Enabled challenge'),
-        '#markup' => $captcha_point->toLink(t('change'), 'edit-form', [
-          'query' => \Drupal::destination()
-            ->getAsArray(),
-        ])->toString(),
-      ];
-    }
-    else {
-      $captcha_element['#title'] = t('CAPTCHA: no challenge enabled');
-      $captcha_element['add_captcha'] = [
-        '#markup' => Link::fromTextAndUrl(
-          t('Place a CAPTCHA here for untrusted users.'),
-          Url::fromRoute('captcha_point.add', [], [
+        ]) : $captchaElementDescription = t('CAPTCHA disabled, Untrusted users won\'t see the captcha (<a href="@settings">general CAPTCHA settings</a>).',
+          ['@settings' => Url::fromRoute('captcha_settings')->toString()]
+        );
+        $captcha_element['#description'] = $captchaElementDescription;
+        $captcha_element['challenge'] = [
+          '#type' => 'item',
+          '#title' => t('Enabled challenge'),
+          '#markup' => $captcha_point->toLink(t('change'), 'edit-form', [
             'query' => \Drupal::destination()
-              ->getAsArray() + ['form_id' => $form_id],
-          ])
-        )->toString(),
-      ];
-    }
+              ->getAsArray(),
+          ])->toString(),
+        ];
+      }
+      else {
+        $captcha_element['#title'] = t('CAPTCHA: no challenge enabled');
+        $captcha_element['add_captcha'] = [
+          '#markup' => Link::fromTextAndUrl(
+        t('Place a CAPTCHA here for untrusted users.'),
+        Url::fromRoute('captcha_point.add', [], [
+          'query' => \Drupal::destination()
+            ->getAsArray() + ['form_id' => $form_id],
+        ])
+          )->toString(),
+        ];
+      }
 
-    // Get placement in form and insert in form.
-    if ($captcha_placement = _captcha_get_captcha_placement($form_id, $form)) {
-      $captchaService->insertCaptchaElement($form, $captcha_placement, $captcha_element);
-    };
+      // Get placement in form and insert in form.
+      if ($captcha_placement = _captcha_get_captcha_placement($form_id, $form)) {
+        $captchaService->insertCaptchaElement($form, $captcha_placement, $captcha_element);
+      };
+    }
+    // If the user has the "skip Captcha" permission, but the
+    // administration_mode is not enabled, simply do nothing and therefore
+    // "skip" the CAPTCHA.
   }
 
   // Add a warning about caching on the Performance settings page.
@@ -279,7 +305,6 @@ function captcha_form_alter(array &$form, FormStateInterface $form_state, $form_
       $form['captcha'] = $override_notice;
     }
   }
-
 }
 
 /**

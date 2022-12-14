@@ -24,11 +24,12 @@ class MigrateCaptchaSimpleConfigurationTest extends MigrateDrupal7TestBase {
    */
   protected $expectedConfig = [
     'captcha.settings' => [
-      'enabled_default' => 1,
+      'enable_globally' => 1,
+      'enable_globally_on_admin_routes' => FALSE,
       'default_challenge' => CaptchaConstants::CAPTCHA_MATH_CAPTCHA_TYPE,
       'description' => 'This question is for testing whether or not you are a human visitor and to prevent automated spam submissions.',
       'administration_mode' => TRUE,
-      'allow_on_admin_pages' => FALSE,
+      'administration_mode_on_admin_routes' => FALSE,
       'default_validation' => 1,
       'persistence' => 1,
       'enable_stats' => TRUE,
