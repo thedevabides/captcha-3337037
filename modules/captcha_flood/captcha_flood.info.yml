@@ -1,0 +1,9 @@
+name: CAPTCHA Flood
+type: module
+description: Provides rate limiting for the CAPTCHA API.
+package: Spam control
+core_version_requirement: '^9.4 || ^10'
+php: ^8.0
+dependencies:
+  - captcha:captcha
+configure: captcha_flood.settings

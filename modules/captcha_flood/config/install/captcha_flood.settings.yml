@@ -1,0 +1,4 @@
+enable_captcha_flood: 0
+ip_limit: 50
+ip_window: 3600
+captcha_flood_message: 'Too many attempts. Try again later.'

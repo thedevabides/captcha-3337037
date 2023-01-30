@@ -1,0 +1,6 @@
+captcha_flood.settings:
+  path: '/admin/config/people/captcha/captcha_flood'
+  defaults:
+    _form: '\Drupal\captcha_flood\Form\CaptchaFloodSettingsForm'
+  requirements:
+    _permission: 'administer CAPTCHA settings'

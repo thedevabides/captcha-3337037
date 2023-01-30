@@ -1,0 +1,16 @@
+captcha_flood.settings:
+  type: config_object
+  label: 'Captcha flood settings'
+  mapping:
+    enable_captcha_flood:
+      type: boolean
+      label: 'Enable CAPTCHA flood'
+    ip_limit:
+      type: integer
+      label: 'IP limit'
+    ip_window:
+      type: integer
+      label: 'IP window'
+    captcha_flood_message:
+      type: label
+      label: 'The error message when a user has triggered an CAPTCHA flood timeout.'

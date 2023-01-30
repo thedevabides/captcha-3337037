@@ -1,0 +1,5 @@
+captcha_flood.settings:
+  title: 'Captcha Flood'
+  route_name: captcha_flood.settings
+  base_route: captcha_settings
+  weight: -1

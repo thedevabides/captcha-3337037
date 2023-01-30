@@ -499,6 +499,23 @@ function captcha_validate($element, FormStateInterface &$form_state) {
     return FALSE;
   }
 
+  // Do not allow any CAPTCHA from the current user's IP if the limit has been
+  // reached.
+  if (\Drupal::config('captcha_flood.settings')->get('enable_captcha_flood', FALSE)) {
+    $flood_control = \Drupal::service('captcha_flood.flood_control');
+    if (!$flood_control->isAllowed(
+      'captcha_flood.failed_captcha_ip',
+      \Drupal::config('captcha_flood.settings')->get('ip_limit'),
+      \Drupal::config('captcha_flood.settings')->get('ip_window'))
+    ) {
+      $form_state->setErrorByName(
+        'captcha_response',
+        t(\Drupal::config('captcha_flood.settings')->get('captcha_flood_message')));
+      return;
+    }
+  }
+
+
   // If the form is cacheable where all solution validation is handed off or if
   // we found a session with a solution then continue with validation.
   $is_cacheable = (bool) $form_state->getValue('captcha_cacheable', FALSE);
@@ -538,6 +555,14 @@ function captcha_validate($element, FormStateInterface &$form_state) {
             '%challenge' => $captcha_info['captcha_type'],
             '%module' => $captcha_info['module'],
           ]);
+      }
+
+      if (\Drupal::config('captcha_flood.settings')->get('enable_captcha_flood', FALSE)) {
+        $flood_control = \Drupal::service('captcha_flood.flood_control');
+        $flood_control->register(
+          'captcha_flood.failed_captcha_ip',
+          \Drupal::config('captcha_flood.settings')->get('ip_window')
+        );
       }
     }
   }
@@ -609,6 +634,14 @@ function captcha_validate($element, FormStateInterface &$form_state) {
               '%challenge' => $captcha_info['captcha_type'],
               '%module' => $captcha_info['module'],
             ]);
+        }
+
+        if (\Drupal::config('captcha_flood.settings')->get('enable_captcha_flood', FALSE)) {
+          $flood_control = \Drupal::service('captcha_flood.flood_control');
+          $flood_control->register(
+            'captcha_flood.failed_captcha_ip',
+            \Drupal::config('captcha.settings')->get('ip_window')
+          );
         }
       }
     }

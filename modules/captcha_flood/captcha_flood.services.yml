@@ -1,0 +1,4 @@
+services:
+  captcha_flood.flood_control:
+    class: Drupal\captcha_flood\CaptchaFloodControl
+    arguments: ['@flood', '@event_dispatcher', '@request_stack']

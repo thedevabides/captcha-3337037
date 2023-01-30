@@ -1,0 +1,6 @@
+<?php
+
+/**
+ * @file
+ * Implements CAPTCHA flood for use with the CAPTCHA module.
+ */

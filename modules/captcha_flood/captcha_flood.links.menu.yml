@@ -1,0 +1,6 @@
+captcha_flood.settings:
+  title: 'Captcha Flood'
+  route_name: captcha_flood.settings
+  description: 'Configure Captcha Flood Settings.'
+  parent: captcha.settings
+  weight: -2
